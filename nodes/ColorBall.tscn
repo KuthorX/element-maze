@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://cqm8nb44kjulg"]
+
+[ext_resource type="Texture2D" uid="uid://mr4koh3ldq81" path="res://images/ColorBall.png" id="1_whicu"]
+[ext_resource type="Script" uid="uid://g3i7jk7q50w1" path="res://scripts/ColorBall.gd" id="2_4nuvx"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0e48y"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_epypp"]
+radius = 847.19
+
+[node name="ColorBall" type="Sprite2D"]
+material = SubResource("CanvasItemMaterial_0e48y")
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_whicu")
+script = ExtResource("2_4nuvx")
+angular_speed = 0.1
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+position = Vector2(-4, 44)
+shape = SubResource("CircleShape2D_epypp")

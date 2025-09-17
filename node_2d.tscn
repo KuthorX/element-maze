@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://l5rjn8rcbgs7"]
+
+[ext_resource type="Texture2D" uid="uid://cygvgtb2efe2g" path="res://images/ElementSource.png" id="1_epypp"]
+[ext_resource type="Script" uid="uid://xh0e5d3lj14e" path="res://scripts/ElementSource.gd" id="2_0e48y"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="BlackWall" type="Sprite2D" parent="."]
+
+[node name="ElementSource" type="Sprite2D" parent="."]
+position = Vector2(431, 349)
+scale = Vector2(0.15, 0.2)
+texture = ExtResource("1_epypp")
+script = ExtResource("2_0e48y")
+
+[node name="BounceFlat" type="Sprite2D" parent="."]
+
+[node name="WhiteWall" type="Sprite2D" parent="."]
+
+[node name="PortalDoors" type="Sprite2D" parent="."]
