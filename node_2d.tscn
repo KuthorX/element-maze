@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://l5rjn8rcbgs7"]
+[gd_scene load_steps=4 format=3 uid="uid://l5rjn8rcbgs7"]
 
 [ext_resource type="Texture2D" uid="uid://cygvgtb2efe2g" path="res://images/ElementSource.png" id="1_epypp"]
 [ext_resource type="Script" uid="uid://xh0e5d3lj14e" path="res://scripts/ElementSource.gd" id="2_0e48y"]
+[ext_resource type="SpriteFrames" uid="uid://r6t4fiwohjp7" path="res://SpriteFrames/ElementSourceArrow.tres" id="3_epypp"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -10,9 +11,15 @@
 [node name="ElementSource" type="Sprite2D" parent="."]
 position = Vector2(431, 349)
 scale = Vector2(0.15, 0.2)
-texture = ExtResource("1_epypp")
 script = ExtResource("2_0e48y")
 initial_momentum = 700.0
+
+[node name="Foreground" type="Sprite2D" parent="ElementSource"]
+texture = ExtResource("1_epypp")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="ElementSource"]
+sprite_frames = ExtResource("3_epypp")
+autoplay = "default"
 
 [node name="BounceFlat" type="Sprite2D" parent="."]
 
