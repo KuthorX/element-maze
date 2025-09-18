@@ -1,0 +1,18 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://7r7iwjosu258"]
+
+[ext_resource type="Texture2D" uid="uid://cxchire1keepa" path="res://images/BounceFlat_1.png" id="1_xpxkh"]
+[ext_resource type="Texture2D" uid="uid://dpb712cvmxx4y" path="res://images/BounceFlat_2.png" id="2_t54sq"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_xpxkh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_t54sq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.0
+}]
