@@ -5,6 +5,10 @@ extends Sprite2D
 @export var momentum_decay_per_second: float = 80.0
 @export var direction: Vector2 = Vector2.RIGHT
 
+@export var energy_full_alpha: float = 100000.0
+@export var energy_zero_alpha: float = 1.0
+@export var mass: float = 1.0
+
 var velocity: Vector2 = Vector2.ZERO
 var previous_position: Vector2
 
@@ -30,7 +34,22 @@ func _physics_process(delta):
 		momentum = max(0.0, momentum - momentum_decay_per_second * delta)
 	else:
 		velocity = Vector2.ZERO
-	
+		
+	# 基于动能映射不透明度；速度为 0 时立即销毁
+	var current_speed: float = velocity.length()
+	if is_zero_approx(current_speed):
+		queue_free()
+		return
+	var current_energy: float = 0.5 * mass * current_speed * current_speed
+	var low_energy: float = min(energy_full_alpha, energy_zero_alpha) as float
+	var high_energy: float = max(energy_full_alpha, energy_zero_alpha) as float
+	if current_energy >= high_energy:
+		modulate.a = 1.0
+	else:
+		var denom_e: float = max(0.0001, high_energy - low_energy)
+		var t: float = (current_energy - low_energy) / denom_e
+		modulate.a = clamp(t, 0.0, 1.0)
+
 
 func check_collisions():
 	# 使用射线检测来检查是否与 BounceFlat 碰撞
@@ -39,13 +58,11 @@ func check_collisions():
 	query.exclude = [self]  # 排除自身
 	
 	var result = space_state.intersect_ray(query)
-	print("check_collisions result", result)
 	if result and result.collider:
 		var collider = result.collider
 		# 检查是否是 BounceFlat
 		if collider.name == "BounceFlatStaticBody2D" and collider.get_parent().has_method("handle_colorball_collision"):
 			# 触发 BounceFlat 的碰撞处理
-			print("hit BounceFlatStaticBody2D")
 			collider.get_parent().handle_colorball_collision(self)
 
 func _on_screen_exited():

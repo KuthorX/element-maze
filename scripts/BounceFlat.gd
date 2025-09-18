@@ -19,9 +19,6 @@ func handle_colorball_collision(colorball):
 	
 	# 计算反射向量：direction = direction - 2 * dot(direction, normal) * normal
 	var dot_product = current_direction.dot(bounce_normal)
-	print("current_direction", current_direction)
-	print("bounce_normal", bounce_normal)
-	print("dot_product", dot_product)
 	var reflected_direction = current_direction - 2 * dot_product * bounce_normal
 	
 	# 应用动量损失和反弹
