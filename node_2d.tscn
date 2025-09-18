@@ -12,6 +12,7 @@ position = Vector2(431, 349)
 scale = Vector2(0.15, 0.2)
 texture = ExtResource("1_epypp")
 script = ExtResource("2_0e48y")
+initial_momentum = 700.0
 
 [node name="BounceFlat" type="Sprite2D" parent="."]
 
