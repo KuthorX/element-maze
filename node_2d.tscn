@@ -17,7 +17,7 @@ radius = 853.33
 radius = 936.47
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q6r6c"]
-size = Vector2(1031.1355, 2551.233)
+size = Vector2(1032, 1955)
 
 [node name="Node2D" type="Node2D"]
 
@@ -92,6 +92,7 @@ scale = Vector2(0.22, 0.275)
 script = ExtResource("5_q6r6c")
 momentum_absorption_rate = 0.1
 bounce_efficiency = 1.2
+rotation_speed = 1.0
 
 [node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat"]
 collision_layer = 2
@@ -103,8 +104,8 @@ shape = SubResource("CircleShape2D_4d7sh")
 [node name="BounceFlatStaticBody2D" type="StaticBody2D" parent="BounceFlats/BounceFlat"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat/BounceFlatStaticBody2D"]
-position = Vector2(-35.382324, 46.625977)
-rotation = 0.0026840807
+position = Vector2(-35.266846, 3.5808105)
+rotation = 0.0026840898
 shape = SubResource("RectangleShape2D_q6r6c")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="BounceFlats/BounceFlat"]
@@ -112,12 +113,13 @@ sprite_frames = ExtResource("5_kdubu")
 autoplay = "default"
 
 [node name="BounceFlat2" type="Sprite2D" parent="BounceFlats"]
-position = Vector2(625.99994, 1251)
+position = Vector2(624, 1251.0001)
 rotation = -0.6642445
 scale = Vector2(0.22, 0.275)
 script = ExtResource("5_q6r6c")
-momentum_absorption_rate = 0.1
-bounce_efficiency = 1.2
+momentum_absorption_rate = -1.0
+bounce_efficiency = 1.8
+rotation_speed = 1.0
 
 [node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat2"]
 collision_layer = 2

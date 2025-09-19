@@ -20,7 +20,31 @@ func _ready():
 	# 连接输入事件
 	interaction_area.input_event.connect(_on_interaction_area_input_event)
 	
+	# 设置鼠标进入/离开检测
+	set_process_unhandled_input(true)
+	
 	GameLogger.debug("TouchArea setup complete - collision_layer: %d, collision_mask: %d" % [interaction_area.collision_layer, interaction_area.collision_mask], "BounceFlat")
+
+func _unhandled_input(event: InputEvent):
+	# 处理全局输入事件，主要用于检测鼠标离开区域
+	if is_dragging:
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+				# 鼠标释放，停止拖拽
+				GameLogger.debug("Mouse released outside TouchArea", "BounceFlat")
+				is_dragging = false
+		elif event is InputEventMouseMotion:
+			# 检查鼠标是否还在交互区域内
+			var mouse_pos = get_global_mouse_position()
+			if not is_point_in_interaction_area(mouse_pos):
+				# 鼠标离开了交互区域，停止拖拽
+				GameLogger.debug("Mouse left TouchArea during drag", "BounceFlat")
+				is_dragging = false
+		elif event is InputEventScreenTouch:
+			if not event.pressed:
+				# 触摸释放，停止拖拽
+				GameLogger.debug("Touch released outside TouchArea", "BounceFlat")
+				is_dragging = false
 
 func _on_interaction_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	# 处理交互区域内的输入事件
@@ -33,6 +57,8 @@ func handle_input_event(event: InputEvent):
 		handle_mouse_motion_event(event)
 	elif event is InputEventScreenTouch:
 		handle_touch_event(event)
+	elif event is InputEventScreenDrag:
+		handle_touch_motion_event(event)
 
 func handle_mouse_button_event(event: InputEventMouseButton):
 	if event.button_index == MOUSE_BUTTON_LEFT:
@@ -49,12 +75,25 @@ func handle_mouse_button_event(event: InputEventMouseButton):
 func handle_mouse_motion_event(_event: InputEventMouseMotion):
 	if is_dragging:
 		var current_mouse_position = get_global_mouse_position()
-		var delta_y = current_mouse_position.y - last_mouse_position.y
 		
-		# 根据鼠标移动方向旋转
-		# 向下移动：顺时针旋转（正值）
-		# 向上移动：逆时针旋转（负值）
-		var rotation_delta = delta_y * rotation_speed
+		# 计算鼠标相对于 BounceFlat 中心的移动
+		var bounce_flat_center = global_position
+		var mouse_vector_from_center = current_mouse_position - bounce_flat_center
+		var last_mouse_vector_from_center = last_mouse_position - bounce_flat_center
+		
+		# 计算角度变化（顺时针为正，逆时针为负）
+		var current_angle = mouse_vector_from_center.angle()
+		var last_angle = last_mouse_vector_from_center.angle()
+		var angle_delta = current_angle - last_angle
+		
+		# 处理角度跨越 -π 到 π 的边界
+		if angle_delta > PI:
+			angle_delta -= 2 * PI
+		elif angle_delta < -PI:
+			angle_delta += 2 * PI
+		
+		# 转换为度数并应用旋转速度
+		var rotation_delta = rad_to_deg(angle_delta) * rotation_speed
 		rotate_bounce_flat(rotation_delta)
 		
 		last_mouse_position = current_mouse_position
@@ -69,6 +108,32 @@ func handle_touch_event(event: InputEventScreenTouch):
 		# 触摸释放
 		GameLogger.debug("Touch released from TouchArea", "BounceFlat")
 		is_dragging = false
+
+func handle_touch_motion_event(event: InputEventScreenDrag):
+	if is_dragging:
+		var current_touch_position = event.position
+		
+		# 计算触摸相对于 BounceFlat 中心的移动
+		var bounce_flat_center = global_position
+		var touch_vector_from_center = current_touch_position - bounce_flat_center
+		var last_touch_vector_from_center = last_mouse_position - bounce_flat_center
+		
+		# 计算角度变化（顺时针为正，逆时针为负）
+		var current_angle = touch_vector_from_center.angle()
+		var last_angle = last_touch_vector_from_center.angle()
+		var angle_delta = current_angle - last_angle
+		
+		# 处理角度跨越 -π 到 π 的边界
+		if angle_delta > PI:
+			angle_delta -= 2 * PI
+		elif angle_delta < -PI:
+			angle_delta += 2 * PI
+		
+		# 转换为度数并应用旋转速度
+		var rotation_delta = rad_to_deg(angle_delta) * rotation_speed
+		rotate_bounce_flat(rotation_delta)
+		
+		last_mouse_position = current_touch_position
 
 func is_point_in_interaction_area(point: Vector2) -> bool:
 	# 检查点是否在 TouchArea 的交互区域内
