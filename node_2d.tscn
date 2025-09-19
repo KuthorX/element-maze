@@ -13,9 +13,8 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_d21ai"]
 radius = 853.33
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_q6r6c"]
-radius = 127.27344
-height = 1898.1819
+[sub_resource type="CircleShape2D" id="CircleShape2D_4d7sh"]
+radius = 936.47
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q6r6c"]
 size = Vector2(1031.1355, 2551.233)
@@ -94,13 +93,16 @@ script = ExtResource("5_q6r6c")
 momentum_absorption_rate = 0.1
 bounce_efficiency = 1.2
 
+[node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat/TouchArea"]
+shape = SubResource("CircleShape2D_4d7sh")
+
 [node name="BounceFlatStaticBody2D" type="StaticBody2D" parent="BounceFlats/BounceFlat"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat/BounceFlatStaticBody2D"]
-position = Vector2(-31.817696, 0)
-shape = SubResource("CapsuleShape2D_q6r6c")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="BounceFlats/BounceFlat/BounceFlatStaticBody2D"]
 position = Vector2(-35.382324, 46.625977)
 rotation = 0.0026840807
 shape = SubResource("RectangleShape2D_q6r6c")
@@ -117,14 +119,16 @@ script = ExtResource("5_q6r6c")
 momentum_absorption_rate = 0.1
 bounce_efficiency = 1.2
 
+[node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat2"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat2/TouchArea"]
+shape = SubResource("CircleShape2D_4d7sh")
+
 [node name="BounceFlatStaticBody2D" type="StaticBody2D" parent="BounceFlats/BounceFlat2"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat2/BounceFlatStaticBody2D"]
-visible = false
-position = Vector2(-31.817696, 0)
-shape = SubResource("CapsuleShape2D_q6r6c")
-
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="BounceFlats/BounceFlat2/BounceFlatStaticBody2D"]
 position = Vector2(-35.382324, 46.625977)
 rotation = 0.0026840807
 shape = SubResource("RectangleShape2D_q6r6c")
