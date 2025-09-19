@@ -49,19 +49,19 @@ func _physics_process(_delta: float) -> void:
 		_guide_ball_to_center(ball)
 
 func _on_body_entered(body: Node) -> void:
-	print("on_body_entered")
+	GameLogger.debug("on_body_entered", "DestinationCircle")
 	_try_capture_from_node(body)
 
 func _on_area_entered(area: Node) -> void:
-	print("on_area_entered")
+	GameLogger.debug("on_area_entered", "DestinationCircle")
 	_try_capture_from_node(area)
 
 func _on_body_exited(body: Node) -> void:
-	print("on_body_exited")
+	GameLogger.debug("on_body_exited", "DestinationCircle")
 	_release_if_tracking(body)
 
 func _on_area_exited(area: Node) -> void:
-	print("on_area_exited")
+	GameLogger.debug("on_area_exited", "DestinationCircle")
 	_release_if_tracking(area)
 
 func _try_capture_from_node(node: Node) -> void:

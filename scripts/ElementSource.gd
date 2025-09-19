@@ -9,7 +9,7 @@ const ColorBallScene := preload("res://nodes/ColorBall.tscn")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
-		print("press ui_accept")
+		GameLogger.info("press ui_accept", "ElementSource")
 		_spawn_color_ball()
 
 func _spawn_color_ball() -> void:

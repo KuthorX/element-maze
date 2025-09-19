@@ -79,4 +79,4 @@ func _update_score_display() -> void:
         score_value_node.text = str(display_score)
 
 func _print_score() -> void:
-    print("Score: ", score)
+    GameLogger.info("Score: %d" % score, "LevelScore")

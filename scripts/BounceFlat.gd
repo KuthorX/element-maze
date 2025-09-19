@@ -20,7 +20,7 @@ func _ready():
 	# 连接输入事件
 	interaction_area.input_event.connect(_on_interaction_area_input_event)
 	
-	print("TouchArea setup complete - collision_layer:", interaction_area.collision_layer, "collision_mask:", interaction_area.collision_mask)
+	GameLogger.debug("TouchArea setup complete - collision_layer: %d, collision_mask: %d" % [interaction_area.collision_layer, interaction_area.collision_mask], "BounceFlat")
 
 func _on_interaction_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	# 处理交互区域内的输入事件
@@ -37,13 +37,13 @@ func handle_input_event(event: InputEvent):
 func handle_mouse_button_event(event: InputEventMouseButton):
 	if event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			print("Mouse pressed on TouchArea")
+			GameLogger.debug("Mouse pressed on TouchArea", "BounceFlat")
 			# 由于事件已经来自 TouchArea，直接开始拖拽
 			is_dragging = true
 			last_mouse_position = get_global_mouse_position()
 		else:
 			# 鼠标释放
-			print("Mouse released from TouchArea")
+			GameLogger.debug("Mouse released from TouchArea", "BounceFlat")
 			is_dragging = false
 
 func handle_mouse_motion_event(_event: InputEventMouseMotion):
@@ -61,60 +61,60 @@ func handle_mouse_motion_event(_event: InputEventMouseMotion):
 
 func handle_touch_event(event: InputEventScreenTouch):
 	if event.pressed:
-		print("Touch pressed on TouchArea")
+		GameLogger.debug("Touch pressed on TouchArea", "BounceFlat")
 		# 由于事件已经来自 TouchArea，直接开始拖拽
 		is_dragging = true
 		last_mouse_position = event.position
 	else:
 		# 触摸释放
-		print("Touch released from TouchArea")
+		GameLogger.debug("Touch released from TouchArea", "BounceFlat")
 		is_dragging = false
 
 func is_point_in_interaction_area(point: Vector2) -> bool:
 	# 检查点是否在 TouchArea 的交互区域内
 	var collision_shape = interaction_area.get_child(0) as CollisionShape2D
 	
-	print("TouchArea collision_shape:", collision_shape)
+	GameLogger.debug("TouchArea collision_shape: %s" % collision_shape, "BounceFlat")
 	
 	if collision_shape and collision_shape.shape:
-		print("TouchArea shape type:", collision_shape.shape.get_class())
+		GameLogger.debug("TouchArea shape type: %s" % collision_shape.shape.get_class(), "BounceFlat")
 		
 		# 将全局坐标转换为 TouchArea 的局部坐标
 		var local_point = interaction_area.to_local(point)
-		print("TouchArea local_point:", local_point)
+		GameLogger.debug("TouchArea local_point: %s" % local_point, "BounceFlat")
 		
 		# 根据形状类型进行检测
 		if collision_shape.shape is RectangleShape2D:
 			var rect_shape = collision_shape.shape as RectangleShape2D
 			var half_size = rect_shape.size / 2.0
-			print("TouchArea rect_size:", rect_shape.size, "half_size:", half_size)
+			GameLogger.debug("TouchArea rect_size: %s, half_size: %s" % [rect_shape.size, half_size], "BounceFlat")
 			
 			# 检查点是否在矩形内（考虑旋转）
 			var rotated_point = local_point.rotated(-interaction_area.rotation)
 			if abs(rotated_point.x) <= half_size.x and abs(rotated_point.y) <= half_size.y:
-				print("Point is inside TouchArea rectangle")
+				GameLogger.debug("Point is inside TouchArea rectangle", "BounceFlat")
 				return true
 				
 		elif collision_shape.shape is CircleShape2D:
 			var circle_shape = collision_shape.shape as CircleShape2D
-			print("TouchArea circle_radius:", circle_shape.radius)
+			GameLogger.debug("TouchArea circle_radius: %s" % circle_shape.radius, "BounceFlat")
 			
 			if local_point.length() <= circle_shape.radius:
-				print("Point is inside TouchArea circle")
+				GameLogger.debug("Point is inside TouchArea circle", "BounceFlat")
 				return true
 				
 		elif collision_shape.shape is CapsuleShape2D:
 			var capsule_shape = collision_shape.shape as CapsuleShape2D
-			print("TouchArea capsule_radius:", capsule_shape.radius, "height:", capsule_shape.height)
+			GameLogger.debug("TouchArea capsule_radius: %s, height: %s" % [capsule_shape.radius, capsule_shape.height], "BounceFlat")
 			
 			var half_height = capsule_shape.height / 2.0
 			var rotated_point = local_point.rotated(-interaction_area.rotation)
 			
 			if abs(rotated_point.y) <= half_height and abs(rotated_point.x) <= capsule_shape.radius:
-				print("Point is inside TouchArea capsule")
+				GameLogger.debug("Point is inside TouchArea capsule", "BounceFlat")
 				return true
 	
-	print("Point is outside TouchArea")
+	GameLogger.debug("Point is outside TouchArea", "BounceFlat")
 	return false
 
 func rotate_bounce_flat(delta_rotation: float):
