@@ -30,7 +30,8 @@ visible = false
 [node name="LevelScore" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
+offset_left = -2.0
+offset_right = 38.0
 offset_bottom = 40.0
 script = ExtResource("1_rj586")
 
