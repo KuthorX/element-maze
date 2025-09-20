@@ -13,6 +13,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		_spawn_color_ball()
 
 func _spawn_color_ball() -> void:
+	# 检查是否有剩余球数
+	var level_state = get_tree().get_first_node_in_group("level_score")
+	if level_state and not level_state.consume_ball():
+		GameLogger.info("Cannot spawn ball: no remaining balls", "ElementSource")
+		return
+	
 	var ball := ColorBallScene.instantiate()
 	if ball == null:
 		return
@@ -27,3 +33,4 @@ func _spawn_color_ball() -> void:
 	ball.momentum = initial_momentum
 	ball.momentum_decay_per_second = initial_momentum_decay_per_second
 	ball.angular_speed = initial_angular_speed
+	GameLogger.info("ColorBall spawned successfully", "ElementSource")

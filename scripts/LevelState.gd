@@ -1,16 +1,20 @@
 extends Control
 
 @export var score_tween_duration: float = 5
+@export var initial_remain_balls: int = 10
 
 var score: int = 0
 var display_score: int = 0
 var target_score: int = 0
 var score_tween: Tween
+var remain_balls: int = 0
 
 func _ready() -> void:
     add_to_group("level_score")
     display_score = score
     target_score = score
+    remain_balls = initial_remain_balls
+    _update_remain_balls_display()
 
 func add_score(amount: int) -> void:
     if amount == 0:
@@ -72,11 +76,50 @@ func _on_score_animation_finished() -> void:
     _update_score_display()
 
 func _update_score_display() -> void:
-    var score_value_node = get_node_or_null("./VBoxContainer/Score/Value")
-    if score_value_node and score_value_node.has_method("set_text"):
-        score_value_node.set_text(str(display_score))
-    elif score_value_node and "text" in score_value_node:
-        score_value_node.text = str(display_score)
+    var score_node = _find_child_node_recursive(self, "Score")
+    if score_node:
+        var score_value_node = _find_child_node_recursive(score_node, "Value")
+        if score_value_node and score_value_node.has_method("set_text"):
+            score_value_node.set_text(str(display_score))
+        elif score_value_node and "text" in score_value_node:
+            score_value_node.text = str(display_score)
+
+func consume_ball() -> bool:
+    """消耗一个球，返回是否成功消耗"""
+    if remain_balls <= 0:
+        GameLogger.info("No balls remaining, cannot spawn", "LevelState")
+        return false
+    
+    remain_balls -= 1
+    _update_remain_balls_display()
+    GameLogger.info("Ball consumed, remaining: %d" % remain_balls, "LevelState")
+    return true
+
+func get_remain_balls() -> int:
+    """获取剩余球数"""
+    return remain_balls
+
+func _update_remain_balls_display() -> void:
+    """更新剩余球数显示"""
+    var remain_balls_node = _find_child_node_recursive(self, "RemainBalls")
+    if remain_balls_node:
+        var remain_balls_value_node = _find_child_node_recursive(remain_balls_node, "Value")
+        if remain_balls_value_node and remain_balls_value_node.has_method("set_text"):
+            remain_balls_value_node.set_text(str(remain_balls))
+        elif remain_balls_value_node and "text" in remain_balls_value_node:
+            remain_balls_value_node.text = str(remain_balls)
+
+func _find_child_node_recursive(parent: Node, node_name: String) -> Node:
+    """递归查找子节点"""
+    if parent.name == node_name:
+        return parent
+    
+    for child in parent.get_children():
+        var result = _find_child_node_recursive(child, node_name)
+        if result:
+            return result
+    
+    return null
 
 func _print_score() -> void:
     GameLogger.info("Score: %d" % score, "LevelScore")
