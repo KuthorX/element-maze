@@ -1,5 +1,7 @@
 extends Control
 
+signal reset_requested
+
 @export var score_tween_duration: float = 5
 @export var initial_remain_balls: int = 10
 
@@ -15,6 +17,9 @@ func _ready() -> void:
     target_score = score
     remain_balls = initial_remain_balls
     _update_remain_balls_display()
+    
+    # 连接重置信号
+    reset_requested.connect(_reset_to_initial_values)
 
 func add_score(amount: int) -> void:
     if amount == 0:
@@ -120,6 +125,32 @@ func _find_child_node_recursive(parent: Node, node_name: String) -> Node:
             return result
     
     return null
+
+func _input(event: InputEvent) -> void:
+    """处理输入事件"""
+    if event is InputEventKey and event.pressed:
+        if event.keycode == KEY_R:
+            reset_requested.emit()
+
+func _reset_to_initial_values() -> void:
+    """重置分数和剩余球数为初始值"""
+    # 停止当前的分数动画
+    if score_tween and score_tween.is_valid():
+        score_tween.kill()
+    
+    # 重置分数
+    score = 0
+    display_score = 0
+    target_score = 0
+    
+    # 重置剩余球数
+    remain_balls = initial_remain_balls
+    
+    # 更新显示
+    _update_score_display()
+    _update_remain_balls_display()
+    
+    GameLogger.info("Reset to initial values: Score=0, RemainBalls=%d" % initial_remain_balls, "LevelState")
 
 func _print_score() -> void:
     GameLogger.info("Score: %d" % score, "LevelScore")

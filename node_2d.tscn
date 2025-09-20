@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://l5rjn8rcbgs7"]
+[gd_scene load_steps=16 format=3 uid="uid://l5rjn8rcbgs7"]
 
 [ext_resource type="Texture2D" uid="uid://cygvgtb2efe2g" path="res://images/ElementSource.png" id="1_epypp"]
 [ext_resource type="Script" uid="uid://lo1bre0lpy2w" path="res://scripts/LevelState.gd" id="1_rj586"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://07w32ftb3n6v" path="res://scripts/CommonLabelGroup.gd" id="2_ir8iy"]
 [ext_resource type="Script" uid="uid://csuirlyl12unl" path="res://scripts/DestinationCircle.gd" id="3_4d7sh"]
 [ext_resource type="SpriteFrames" uid="uid://r6t4fiwohjp7" path="res://SpriteFrames/ElementSourceArrow.tres" id="3_epypp"]
+[ext_resource type="Script" uid="uid://bttsosumj0xpm" path="res://scripts/ButtonReplay.gd" id="4_hqns4"]
 [ext_resource type="SpriteFrames" uid="uid://7r7iwjosu258" path="res://SpriteFrames/BounceFlat.tres" id="5_kdubu"]
 [ext_resource type="Script" uid="uid://c1ijpdu63rwha" path="res://scripts/BounceFlat.gd" id="5_q6r6c"]
 [ext_resource type="Texture2D" uid="uid://ccat63jcuwfmp" path="res://images/DestinationCircle.png" id="6_kdubu"]
@@ -133,6 +134,7 @@ offset_right = 1406.0
 offset_bottom = 108.0
 theme_override_font_sizes/font_size = 80
 text = "R"
+script = ExtResource("4_hqns4")
 
 [node name="DestinationCircle" type="Sprite2D" parent="."]
 position = Vector2(2944, 789)
