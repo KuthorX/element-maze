@@ -63,6 +63,7 @@ scale = Vector2(0.25, 0.25)
 texture = ExtResource("6_kdubu")
 script = ExtResource("3_4d7sh")
 gradient_colors = Array[Color]([Color(0.3215116, 0.69067013, 0.37347743, 1), Color(0.35421458, 0.6346909, 0.7854926, 1), Color(0.5170341, 0.561762, 0.9152247, 1), Color(0.3529412, 0.63529414, 0.78431374, 1)])
+snap_distance_px = 0.0
 
 [node name="Area2D" type="Area2D" parent="DestinationCircle"]
 
@@ -87,12 +88,13 @@ autoplay = "default"
 
 [node name="BounceFlat" type="Sprite2D" parent="BounceFlats"]
 position = Vector2(1265.9999, 338.00003)
-rotation = -0.5456184
 scale = Vector2(0.22, 0.275)
 script = ExtResource("5_q6r6c")
 momentum_absorption_rate = 0.1
 bounce_efficiency = 1.2
 rotation_speed = 1.0
+min_rotation = -60.0
+max_rotation = 60.0
 
 [node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat"]
 collision_layer = 2
@@ -114,12 +116,13 @@ autoplay = "default"
 
 [node name="BounceFlat2" type="Sprite2D" parent="BounceFlats"]
 position = Vector2(624, 1251.0001)
-rotation = -0.6642445
 scale = Vector2(0.22, 0.275)
 script = ExtResource("5_q6r6c")
 momentum_absorption_rate = -1.0
 bounce_efficiency = 1.8
 rotation_speed = 1.0
+min_rotation = -60.0
+max_rotation = 60.0
 
 [node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat2"]
 collision_layer = 2
