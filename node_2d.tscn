@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://l5rjn8rcbgs7"]
 
 [ext_resource type="Texture2D" uid="uid://cygvgtb2efe2g" path="res://images/ElementSource.png" id="1_epypp"]
-[ext_resource type="Script" uid="uid://lo1bre0lpy2w" path="res://scripts/LevelScore.gd" id="1_rj586"]
+[ext_resource type="Script" uid="uid://lo1bre0lpy2w" path="res://scripts/LevelState.gd" id="1_rj586"]
 [ext_resource type="Script" uid="uid://xh0e5d3lj14e" path="res://scripts/ElementSource.gd" id="2_0e48y"]
 [ext_resource type="FontFile" uid="uid://cahop575b4dd7" path="res://fonts/EmilysCandy-Regular.ttf" id="2_4d7sh"]
 [ext_resource type="Script" uid="uid://csuirlyl12unl" path="res://scripts/DestinationCircle.gd" id="3_4d7sh"]
@@ -26,7 +26,7 @@ visible = false
 
 [node name="PortalDoors" type="Sprite2D" parent="."]
 
-[node name="LevelScore" type="Control" parent="."]
+[node name="LevelState" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -2.0
@@ -34,24 +34,46 @@ offset_right = 38.0
 offset_bottom = 40.0
 script = ExtResource("1_rj586")
 
-[node name="Score" type="HBoxContainer" parent="LevelScore"]
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelState"]
 layout_mode = 0
-offset_left = 2057.0
-offset_top = 123.0
-offset_right = 2797.0
-offset_bottom = 298.0
+offset_left = 1973.0
+offset_top = 95.0
+offset_right = 2419.0
+offset_bottom = 421.0
 
-[node name="Label" type="Label" parent="LevelScore/Score"]
+[node name="RemainBalls" type="HBoxContainer" parent="LevelState/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LevelState/VBoxContainer/RemainBalls"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_4d7sh")
+theme_override_font_sizes/font_size = 128
+text = "Remain Balls"
+
+[node name="Empty" type="Label" parent="LevelState/VBoxContainer/RemainBalls"]
+layout_mode = 2
+text = "            "
+
+[node name="Value" type="Label" parent="LevelState/VBoxContainer/RemainBalls"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_4d7sh")
+theme_override_font_sizes/font_size = 128
+text = "0"
+
+[node name="Score" type="HBoxContainer" parent="LevelState/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LevelState/VBoxContainer/Score"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_4d7sh")
 theme_override_font_sizes/font_size = 128
 text = "Score"
 
-[node name="Empty" type="Label" parent="LevelScore/Score"]
+[node name="Empty" type="Label" parent="LevelState/VBoxContainer/Score"]
 layout_mode = 2
 text = "            "
 
-[node name="Value" type="Label" parent="LevelScore/Score"]
+[node name="Value" type="Label" parent="LevelState/VBoxContainer/Score"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_4d7sh")
 theme_override_font_sizes/font_size = 128
@@ -64,6 +86,7 @@ texture = ExtResource("6_kdubu")
 script = ExtResource("3_4d7sh")
 gradient_colors = Array[Color]([Color(0.3215116, 0.69067013, 0.37347743, 1), Color(0.35421458, 0.6346909, 0.7854926, 1), Color(0.5170341, 0.561762, 0.9152247, 1), Color(0.3529412, 0.63529414, 0.78431374, 1)])
 snap_distance_px = 0.0
+scale_values = Array[float]([0.25, 0.2, 0.15, 0.2])
 
 [node name="Area2D" type="Area2D" parent="DestinationCircle"]
 

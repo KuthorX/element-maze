@@ -4,7 +4,12 @@ extends Sprite2D
 @export var gradient_colors: Array[Color] = []
 @export var snap_distance_px: float = 2.0
 
+# 缩放相关属性
+@export var scale_values: Array[float] = [0.8, 1.0, 1.2]  # 离散的缩放值
+@export var scale_step: float = 1.0  # 缩放变化速度
+
 var _color_index_t: float = 0.0
+var _scale_index_t: float = 0.0
 var last_captured_momentum: int = 0
 
 const ColorBallScript := preload("res://scripts/ColorBall.gd")
@@ -39,6 +44,14 @@ func _process(delta: float) -> void:
 	var seg_index: int = int(floor(_color_index_t)) % count
 	var c: Color = gradient_colors[seg_index]
 	modulate = Color(c.r, c.g, c.b, modulate.a)
+	
+	# 缩放变化 - 在给定的缩放值数组中进行离散跳变
+	var scale_count := scale_values.size()
+	if scale_count > 0:
+		_scale_index_t = fposmod(_scale_index_t + scale_step * delta, float(scale_count))
+		var scale_index: int = int(floor(_scale_index_t)) % scale_count
+		var current_scale: float = scale_values[scale_index]
+		scale = Vector2(current_scale, current_scale)
 
 func _physics_process(_delta: float) -> void:
 	# 对正在被吸附的球，持续引导其以恰好在圆心停下
@@ -152,7 +165,7 @@ func _restore_decay(ball: Node, original_decay: float) -> void:
 		ball.momentum_decay_per_second = original_decay
 
 func _add_score(amount: int) -> void:
-	var ls := get_node_or_null("/root/LevelScore")
+	var ls := get_node_or_null("/root/LevelState")
 	if ls == null:
 		var candidates := get_tree().get_nodes_in_group("level_score")
 		if candidates.size() > 0:

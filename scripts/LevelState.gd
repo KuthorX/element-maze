@@ -72,7 +72,7 @@ func _on_score_animation_finished() -> void:
     _update_score_display()
 
 func _update_score_display() -> void:
-    var score_value_node = get_node_or_null("./Score/Value")
+    var score_value_node = get_node_or_null("./VBoxContainer/Score/Value")
     if score_value_node and score_value_node.has_method("set_text"):
         score_value_node.set_text(str(display_score))
     elif score_value_node and "text" in score_value_node:
