@@ -3,6 +3,5 @@
 /android/
 temp*/
 temp*
-log*/
-log*
+log/
 *.log
