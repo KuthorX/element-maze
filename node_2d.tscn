@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://l5rjn8rcbgs7"]
+[gd_scene load_steps=19 format=3 uid="uid://l5rjn8rcbgs7"]
 
 [ext_resource type="Texture2D" uid="uid://cygvgtb2efe2g" path="res://images/ElementSource.png" id="1_epypp"]
 [ext_resource type="Script" uid="uid://lo1bre0lpy2w" path="res://scripts/LevelState.gd" id="1_rj586"]
@@ -9,18 +9,23 @@
 [ext_resource type="SpriteFrames" uid="uid://r6t4fiwohjp7" path="res://SpriteFrames/ElementSourceArrow.tres" id="3_epypp"]
 [ext_resource type="Theme" uid="uid://dwcbrrffvaosa" path="res://theme/state_label.tres" id="4_hqns4"]
 [ext_resource type="SpriteFrames" uid="uid://7r7iwjosu258" path="res://SpriteFrames/BounceFlat.tres" id="5_kdubu"]
-[ext_resource type="Script" uid="uid://c1ijpdu63rwha" path="res://scripts/BounceFlat.gd" id="5_q6r6c"]
+[ext_resource type="Script" uid="uid://c1ijpdu63rwha" path="res://scripts/EnergyWall.gd" id="5_q6r6c"]
 [ext_resource type="Theme" uid="uid://bhan4heo4qhpb" path="res://theme/hint_label.tres" id="5_x0ka3"]
 [ext_resource type="Texture2D" uid="uid://ccat63jcuwfmp" path="res://images/DestinationCircle.png" id="6_kdubu"]
+[ext_resource type="Texture2D" uid="uid://du60rjstwcb2h" path="res://images/DecelerationZone.png" id="13_0h7mo"]
+[ext_resource type="Script" uid="uid://claivnojwy5g6" path="res://scripts/DecZone.gd" id="13_nr8wp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d21ai"]
 radius = 853.33
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q6r6c"]
+size = Vector2(350.02466, 1955)
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_4d7sh"]
 radius = 936.47
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_q6r6c"]
-size = Vector2(1032, 1955)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d2bti"]
+size = Vector2(174, 172)
 
 [node name="Node2D" type="Node2D"]
 
@@ -90,72 +95,116 @@ layout_mode = 2
 theme = ExtResource("4_hqns4")
 text = "0"
 
+[node name="Empty2" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
+layout_mode = 2
+text = "            "
+
+[node name="TargetValue" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
+layout_mode = 2
+theme = ExtResource("4_hqns4")
+text = "( 20000 )"
+
 [node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_hqns4")
 text = "Press R to Replay"
 horizontal_alignment = 2
 
-[node name="HintLabel2" type="Label" parent="."]
-offset_left = 308.0
-offset_top = 10.0
-offset_right = 935.0
-offset_bottom = 107.0
+[node name="HintLabel5" type="Label" parent="."]
+offset_left = -20.000002
+offset_top = 747.0
+offset_right = 607.0
+offset_bottom = 844.0
+rotation = -0.12926245
 theme = ExtResource("5_x0ka3")
 theme_override_font_sizes/font_size = 28
-text = "Use Mouse to DRAG this !"
+text = "Use Mouse Wheel to ROTATE it !"
+horizontal_alignment = 1
+
+[node name="HintLabel2" type="Label" parent="."]
+offset_left = 341.00003
+offset_top = 119.0
+offset_right = 993.0
+offset_bottom = 216.0
+rotation = 0.05406394
+theme = ExtResource("5_x0ka3")
+theme_override_font_sizes/font_size = 28
+text = "This is Energy Wall
+It can INCREASE ball speed"
+horizontal_alignment = 1
+
+[node name="HintLabel6" type="Label" parent="."]
+offset_left = 422.0
+offset_top = 461.99994
+offset_right = 1049.0
+offset_bottom = 558.9999
+rotation = -0.1287853
+theme = ExtResource("5_x0ka3")
+theme_override_font_sizes/font_size = 20
+text = "AVOID pass here since it will 
+DECREASE ball speed !"
 horizontal_alignment = 1
 
 [node name="HintLabel" type="Label" parent="."]
-offset_left = -26.0
-offset_top = 260.0
-offset_right = 601.0
-offset_bottom = 357.0
+offset_left = -111.0
+offset_top = 237.0
+offset_right = 516.0
+offset_bottom = 334.0
 theme = ExtResource("5_x0ka3")
 theme_override_font_sizes/font_size = 28
-text = "Press Space to LAUNCH Balls !"
+text = "Press Space to 
+LAUNCH Balls !"
 horizontal_alignment = 1
 
 [node name="HintLabel4" type="Label" parent="."]
-offset_left = 956.0
-offset_top = 479.0
-offset_right = 2356.0
-offset_bottom = 626.0
+offset_left = 271.00006
+offset_top = 934.00006
+offset_right = 1671.0
+offset_bottom = 1081.0
+rotation = -0.0002328381
+scale = Vector2(1.0000114, 0.99172926)
 theme = ExtResource("4_hqns4")
 text = "If you want to SEE MORE then
-Long Press Z and Left Mouse to
-MOVE Camera !"
+Press Left Mouse to MOVE Camera !"
 horizontal_alignment = 1
 
+[node name="HintLabel7" type="Label" parent="."]
+offset_left = 1677.0
+offset_top = 532.0
+offset_right = 3077.0
+offset_bottom = 628.99994
+rotation = -0.035163544
+theme = ExtResource("4_hqns4")
+text = "Score will higher as Ball SPEED higher !"
+
 [node name="HintLabel3" type="Label" parent="."]
-offset_left = 1280.0
-offset_top = 289.0
-offset_right = 2680.0
-offset_bottom = 386.0
+offset_left = 1217.0
+offset_top = 416.00003
+offset_right = 2617.0
+offset_bottom = 513.0
+rotation = -0.035163544
 theme = ExtResource("4_hqns4")
 text = "Make sure ALL Balls run into HERE ! "
 
-[node name="DestinationCircle" type="Sprite2D" parent="."]
-position = Vector2(1970.0002, 389)
+[node name="DestinationCircle" type="Area2D" parent="."]
+position = Vector2(1944.0001, 412.00003)
 rotation = -0.0025059893
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("6_kdubu")
 script = ExtResource("3_4d7sh")
 gradient_colors = Array[Color]([Color(0.3215116, 0.69067013, 0.37347743, 1), Color(0.35421458, 0.6346909, 0.7854926, 1), Color(0.5170341, 0.561762, 0.9152247, 1), Color(0.3529412, 0.63529414, 0.78431374, 1)])
-snap_distance_px = 0.0
-scale_values = Array[float]([0.08, 0.1, 0.12, 0.1])
+scale_values = Array[float]([0.8, 1.0, 1.2, 1.0])
 
-[node name="Area2D" type="Area2D" parent="DestinationCircle"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DestinationCircle/Area2D"]
-position = Vector2(7.692383, 23.077148)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DestinationCircle"]
+position = Vector2(7.6914063, 23.077393)
 shape = SubResource("CircleShape2D_d21ai")
+
+[node name="Sprite2D" type="Sprite2D" parent="DestinationCircle"]
+texture = ExtResource("6_kdubu")
 
 [node name="ElementSource" type="Sprite2D" parent="."]
 position = Vector2(193, 158)
 scale = Vector2(0.06, 0.079)
 script = ExtResource("2_0e48y")
-initial_momentum = 700.0
 
 [node name="Foreground" type="Sprite2D" parent="ElementSource"]
 texture = ExtResource("1_epypp")
@@ -164,60 +213,149 @@ texture = ExtResource("1_epypp")
 sprite_frames = ExtResource("3_epypp")
 autoplay = "default"
 
-[node name="BounceFlats" type="Node2D" parent="."]
-
-[node name="BounceFlat" type="Sprite2D" parent="BounceFlats"]
-position = Vector2(622, 154)
-scale = Vector2(0.08, 0.101)
+[node name="EnergyWall" type="AnimatableBody2D" parent="."]
+position = Vector2(647, 182)
+rotation = -0.40297922
+scale = Vector2(0.12, 0.12)
 script = ExtResource("5_q6r6c")
-momentum_absorption_rate = 0.1
-bounce_efficiency = 1.2
-rotation_speed = 1.0
-min_rotation = -60.0
-max_rotation = 60.0
 
-[node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat"]
-collision_layer = 2
-collision_mask = 2
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall"]
+rotation = 0.00055759767
+sprite_frames = ExtResource("5_kdubu")
+autoplay = "default"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat/TouchArea"]
-shape = SubResource("CircleShape2D_4d7sh")
-
-[node name="BounceFlatStaticBody2D" type="StaticBody2D" parent="BounceFlats/BounceFlat"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat/BounceFlatStaticBody2D"]
-position = Vector2(-35.266846, 3.5808105)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall"]
+position = Vector2(-37.496094, 3.574585)
 rotation = 0.0026840898
 shape = SubResource("RectangleShape2D_q6r6c")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="BounceFlats/BounceFlat"]
-sprite_frames = ExtResource("5_kdubu")
-autoplay = "default"
-
-[node name="BounceFlat2" type="Sprite2D" parent="BounceFlats"]
-position = Vector2(247, 555)
-scale = Vector2(0.08, 0.1)
-script = ExtResource("5_q6r6c")
-momentum_absorption_rate = -1.0
-bounce_efficiency = 1.8
-rotation_speed = 1.0
-min_rotation = -60.0
-max_rotation = 60.0
-
-[node name="TouchArea" type="Area2D" parent="BounceFlats/BounceFlat2"]
+[node name="TouchArea" type="Area2D" parent="EnergyWall"]
 collision_layer = 2
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat2/TouchArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall/TouchArea"]
 shape = SubResource("CircleShape2D_4d7sh")
 
-[node name="BounceFlatStaticBody2D" type="StaticBody2D" parent="BounceFlats/BounceFlat2"]
+[node name="EnergyWall2" type="AnimatableBody2D" parent="."]
+position = Vector2(234.00003, 574)
+rotation = -0.56799895
+scale = Vector2(0.12, 0.12)
+script = ExtResource("5_q6r6c")
+speed_boost = 2.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BounceFlats/BounceFlat2/BounceFlatStaticBody2D"]
-position = Vector2(-35.382324, 46.625977)
-rotation = 0.0026840807
-shape = SubResource("RectangleShape2D_q6r6c")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="BounceFlats/BounceFlat2"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall2"]
 sprite_frames = ExtResource("5_kdubu")
 autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall2"]
+position = Vector2(-37.496094, 3.574585)
+rotation = 0.0026840898
+shape = SubResource("RectangleShape2D_q6r6c")
+
+[node name="TouchArea" type="Area2D" parent="EnergyWall2"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall2/TouchArea"]
+shape = SubResource("CircleShape2D_4d7sh")
+
+[node name="EnergyWall3" type="AnimatableBody2D" parent="."]
+position = Vector2(2361.0002, 143)
+rotation = -1.2382703
+scale = Vector2(0.12, 0.12)
+script = ExtResource("5_q6r6c")
+speed_boost = 2.2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall3"]
+sprite_frames = ExtResource("5_kdubu")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall3"]
+position = Vector2(-37.496094, 3.574585)
+rotation = 0.0026840898
+shape = SubResource("RectangleShape2D_q6r6c")
+
+[node name="TouchArea" type="Area2D" parent="EnergyWall3"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall3/TouchArea"]
+shape = SubResource("CircleShape2D_4d7sh")
+
+[node name="DecZone" type="Area2D" parent="."]
+position = Vector2(761, 511)
+script = ExtResource("13_nr8wp")
+deceleration_rate = 1.5
+min_opacity = 0.1
+
+[node name="Sprite2D" type="Sprite2D" parent="DecZone"]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("13_0h7mo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DecZone"]
+shape = SubResource("RectangleShape2D_d2bti")
+
+[node name="EnergyWall4" type="AnimatableBody2D" parent="."]
+position = Vector2(923.99994, 547)
+rotation = -0.20620963
+scale = Vector2(0.12, 0.12)
+script = ExtResource("5_q6r6c")
+speed_boost = 2.4
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall4"]
+sprite_frames = ExtResource("5_kdubu")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall4"]
+position = Vector2(-37.496094, 3.574585)
+rotation = 0.0026840898
+shape = SubResource("RectangleShape2D_q6r6c")
+
+[node name="TouchArea" type="Area2D" parent="EnergyWall4"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall4/TouchArea"]
+shape = SubResource("CircleShape2D_4d7sh")
+
+[node name="DecZone2" type="Area2D" parent="."]
+position = Vector2(2149, 332)
+script = ExtResource("13_nr8wp")
+deceleration_rate = 1.5
+min_opacity = 0.1
+
+[node name="Sprite2D" type="Sprite2D" parent="DecZone2"]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("13_0h7mo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DecZone2"]
+shape = SubResource("RectangleShape2D_d2bti")
+
+[node name="EnergyWall5" type="AnimatableBody2D" parent="."]
+position = Vector2(1585, -213.99997)
+rotation = -1.3304579
+scale = Vector2(0.12, 0.12)
+script = ExtResource("5_q6r6c")
+speed_boost = 2.4
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall5"]
+sprite_frames = ExtResource("5_kdubu")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall5"]
+position = Vector2(-37.496094, 3.574585)
+rotation = 0.0026840898
+shape = SubResource("RectangleShape2D_q6r6c")
+
+[node name="TouchArea" type="Area2D" parent="EnergyWall5"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall5/TouchArea"]
+shape = SubResource("CircleShape2D_4d7sh")
+
+[connection signal="input_event" from="EnergyWall/TouchArea" to="EnergyWall" method="_on_touch_area_input_event"]
+[connection signal="input_event" from="EnergyWall2/TouchArea" to="EnergyWall2" method="_on_touch_area_input_event"]
+[connection signal="input_event" from="EnergyWall3/TouchArea" to="EnergyWall3" method="_on_touch_area_input_event"]
+[connection signal="input_event" from="EnergyWall4/TouchArea" to="EnergyWall4" method="_on_touch_area_input_event"]
+[connection signal="input_event" from="EnergyWall5/TouchArea" to="EnergyWall5" method="_on_touch_area_input_event"]

@@ -2,10 +2,7 @@ extends Sprite2D
 
 const ColorBallScene := preload("res://nodes/ColorBall.tscn")
 
-@export var initial_momentum: float = 400.0
-@export var initial_direction: Vector2 = Vector2.RIGHT
-@export var initial_momentum_decay_per_second: float = 80.0
-@export var initial_angular_speed: float = deg_to_rad(90.0)
+@export var initial_speed: float = 400.0
 
 # 跟踪已生成的 ColorBall 实例
 var spawned_balls: Array[Node] = []
@@ -38,10 +35,7 @@ func _spawn_color_ball() -> void:
 	parent_node.add_child(ball)
 	ball.global_position = global_position
 	# 配置初始运动参数（方向与动量）
-	ball.direction = initial_direction.normalized()
-	ball.momentum = initial_momentum
-	ball.momentum_decay_per_second = initial_momentum_decay_per_second
-	ball.angular_speed = initial_angular_speed
+	ball.speed = initial_speed
 	
 	# 将球添加到跟踪列表中
 	spawned_balls.append(ball)

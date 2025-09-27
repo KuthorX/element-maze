@@ -8,12 +8,9 @@ func _ready():
 	enabled = true
 
 func _input(event):
-	# 检查 Z 键是否按下
-	var z_pressed = Input.is_key_pressed(KEY_Z)
-	
 	# 鼠标左键按下事件
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if z_pressed and event.pressed:
+		if event.pressed:
 			# Z 键按下且鼠标左键按下，开始拖动
 			is_dragging = true
 			last_mouse_pos = event.position
@@ -22,7 +19,7 @@ func _input(event):
 			is_dragging = false
 	
 	# 鼠标移动事件
-	if event is InputEventMouseMotion and is_dragging and z_pressed:
+	if event is InputEventMouseMotion and is_dragging:
 		# 计算鼠标移动的偏移量
 		var mouse_delta = event.position - last_mouse_pos
 		# 更新相机位置（注意坐标系，鼠标向下移动应增加 Y 坐标）

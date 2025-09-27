@@ -1,69 +1,39 @@
-extends Sprite2D
+extends CharacterBody2D
 
-@export var angular_speed: float = deg_to_rad(90.0)
-@export var momentum: float = 0.0
-@export var momentum_decay_per_second: float = 80.0
-@export var direction: Vector2 = Vector2.RIGHT
+@export var speed: float = 400.0  # 初始速度幅度
+@export var friction: float = 0.999  # 速度衰减率（<1 表示逐渐减速）
+@export var rotation_factor: float = 0.01  # 速度到角速度的转换系数（从上一版本保留）
 
-@export var energy_full_alpha: float = 100000.0
-@export var energy_zero_alpha: float = 1.0
-@export var mass: float = 1.0
-
-var velocity: Vector2 = Vector2.ZERO
-var previous_position: Vector2
+var direction: Vector2 = Vector2.RIGHT  # 初始方向
 
 func _ready():
-	previous_position = global_position
-	var notifier := VisibleOnScreenNotifier2D.new()
-	add_child(notifier)
-	notifier.connect("screen_exited", Callable(self, "_on_screen_exited"))
+	velocity = direction * speed  # 设置初始速度
 
-func _physics_process(delta):
-	# 检测碰撞
-	check_collisions()
+func _physics_process(delta: float):
+	# 计算角速度，与当前速度模成正比（从上一版本保留）
+	var angular_speed = velocity.length() * rotation_factor
+	rotation += angular_speed * delta  # 更新旋转
 
-	self.rotation += angular_speed * delta
-	
-	# 更新前一个位置
-	previous_position = global_position
+	# 应用速度衰减（如果速度不为零）
+	if velocity.length() > 0.1:  # 避免浮点误差导致永不停止
+		velocity *= friction
 
-	# 将当前动量转换为速度向量
-	if momentum > 0.0:
-		velocity = direction.normalized() * momentum
-		global_position += velocity * delta
-		momentum = max(0.0, momentum - momentum_decay_per_second * delta)
-	else:
-		velocity = Vector2.ZERO
-		
-	# 基于动能映射不透明度；速度为 0 时立即销毁
-	var current_speed: float = velocity.length()
-	if is_zero_approx(current_speed):
-		queue_free()
-		return
-	var current_energy: float = 0.5 * mass * current_speed * current_speed
-	var low_energy: float = min(energy_full_alpha, energy_zero_alpha) as float
-	var high_energy: float = max(energy_full_alpha, energy_zero_alpha) as float
-	if current_energy >= high_energy:
-		modulate.a = 1.0
-	else:
-		var denom_e: float = max(0.0001, high_energy - low_energy)
-		var t: float = (current_energy - low_energy) / denom_e
-		modulate.a = clamp(t, 0.0, 1.0)
-
-
-func check_collisions():
-	# 使用射线检测来检查是否与 BounceFlat 碰撞
-	var space_state = get_world_2d().direct_space_state
-	var query = PhysicsRayQueryParameters2D.create(previous_position, global_position)
-	query.exclude = [self]  # 排除自身
-	
-	var result = space_state.intersect_ray(query)
-	if result and result.collider:
-		var collider = result.collider
-		# 检查是否是 BounceFlat
-		if collider.name == "BounceFlatStaticBody2D" and collider.get_parent().has_method("handle_colorball_collision"):
-			# 触发 BounceFlat 的碰撞处理
-			collider.get_parent().handle_colorball_collision(self)
-
-func _on_screen_exited():
-	queue_free()
+	# 移动并检测碰撞
+	var collision_info = move_and_collide(velocity * delta)
+	if collision_info:
+		var collider = collision_info.get_collider()
+		if collider is AnimatableBody2D:
+			# 先计算反弹
+			velocity = velocity.bounce(collision_info.get_normal())
+			
+			# 获取能量板的 speed_boost 参数
+			var boost = collider.speed_boost if "speed_boost" in collider else 1.0  # 默认1.0如果未设置
+			
+			# 提升速度模（保持方向）
+			var current_speed = velocity.length()
+			velocity = velocity.normalized() * (current_speed * boost)
+			
+			# 处理剩余运动（反弹并应用提升）
+			var remainder = collision_info.get_remainder().bounce(collision_info.get_normal())
+			remainder = remainder.normalized() * (remainder.length() * boost)  # 应用提升到剩余向量
+			move_and_collide(remainder)
