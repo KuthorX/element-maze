@@ -3,7 +3,7 @@ extends Area2D
 @export var hue_step: float = 1.0  # 颜色变化速度
 @export var gradient_colors: Array[Color] = []  # 颜色渐变数组
 @export var scale_values: Array[float] = [0.8, 1.0, 1.2]  # 离散缩放值
-@export var scale_step: float = 0.5  # 缩放变化速度
+@export var scale_step: float = 1  # 缩放变化速度
 @export var snap_distance_px: float = 0.0  # 吸附距离（像素）
 @export var move_duration: float = 1.0  # 吸入效果持续时间（秒）
 

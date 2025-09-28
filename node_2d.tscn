@@ -102,7 +102,7 @@ text = "            "
 [node name="TargetValue" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
 layout_mode = 2
 theme = ExtResource("4_hqns4")
-text = "( 20000 )"
+text = "( 36200 )"
 
 [node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer"]
 layout_mode = 2
@@ -190,6 +190,8 @@ text = "Make sure ALL Balls run into HERE ! "
 position = Vector2(1944.0001, 412.00003)
 rotation = -0.0025059893
 scale = Vector2(0.1, 0.1)
+collision_mask = 3
+priority = 99
 script = ExtResource("3_4d7sh")
 gradient_colors = Array[Color]([Color(0.3215116, 0.69067013, 0.37347743, 1), Color(0.35421458, 0.6346909, 0.7854926, 1), Color(0.5170341, 0.561762, 0.9152247, 1), Color(0.3529412, 0.63529414, 0.78431374, 1)])
 scale_values = Array[float]([0.8, 1.0, 1.2, 1.0])
