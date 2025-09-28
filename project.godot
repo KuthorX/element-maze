@@ -10,10 +10,13 @@ config_version=5
 
 [application]
 
-config/name="ElementMaze"
+config/name="Guide The Ball"
+config/version="0.0.1"
 run/main_scene="uid://l5rjn8rcbgs7"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.73333335, 0.73333335, 0.73333335, 1)
+boot_splash/image="uid://cygvgtb2efe2g"
+config/icon="uid://mr4koh3ldq81"
 
 [display]
 
