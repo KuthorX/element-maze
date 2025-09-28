@@ -22,3 +22,4 @@ data_*/
 mono_crash.*.json
 
 .DS_Store
+.vscode/
