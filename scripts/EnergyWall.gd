@@ -28,7 +28,6 @@ func _ready():
 		# 连接输入事件
 		if not interaction_area.is_connected("input_event", _on_touch_area_input_event):
 			interaction_area.connect("input_event", _on_touch_area_input_event)
-		print("TouchArea signals connected")
 	else:
 		push_error("TouchArea not found or not an Area2D")
 
@@ -47,15 +46,14 @@ func _on_touch_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: 
 			var new_rotation_deg = rad_to_deg(target_rotation) + rotation_step
 			new_rotation_deg = clamp(new_rotation_deg, min_rotation_degrees, max_rotation_degrees)
 			target_rotation = deg_to_rad(new_rotation_deg)
-			print("Wheel up, target rotation: ", new_rotation_deg)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			# 滚轮下滚，逆时针旋转
 			var new_rotation_deg = rad_to_deg(target_rotation) - rotation_step
 			new_rotation_deg = clamp(new_rotation_deg, min_rotation_degrees, max_rotation_degrees)
 			target_rotation = deg_to_rad(new_rotation_deg)
-			print("Wheel down, target rotation: ", new_rotation_deg)
 
 func _process(delta: float):
 	# 平滑旋转到目标角度
 	if abs(rotation - target_rotation) > 0.01:  # 避免微小抖动
-		rotation = lerp_angle(rotation, target_rotation, rotation_smoothing * delta)
+		# 指数平滑，与帧率无关，权重始终在 (0, 1) 内，低帧率下不会过冲或发散
+		rotation = lerp_angle(rotation, target_rotation, 1.0 - exp(-rotation_smoothing * delta))
