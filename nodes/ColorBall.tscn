@@ -1,23 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://cqm8nb44kjulg"]
+[gd_scene load_steps=4 format=3 uid="uid://cqm8nb44kjulg"]
 
-[ext_resource type="Texture2D" uid="uid://mr4koh3ldq81" path="res://images/ColorBall.png" id="1_whicu"]
+[ext_resource type="Texture2D" uid="uid://dpnmcnkrbfiaj" path="res://images/art/ball.png" id="1_ball"]
 [ext_resource type="Script" uid="uid://g3i7jk7q50w1" path="res://scripts/ColorBall.gd" id="2_4nuvx"]
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0e48y"]
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_epypp"]
-radius = 847.19
+radius = 51.0
 
 [node name="ColorBall" type="CharacterBody2D"]
-material = SubResource("CanvasItemMaterial_0e48y")
-scale = Vector2(0.06, 0.06)
 collision_layer = 2
 script = ExtResource("2_4nuvx")
 
 [node name="ColorBallCollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-3.9999998, 43.999996)
-scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("CircleShape2D_epypp")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_whicu")
+scale = Vector2(0.98, 0.98)
+texture = ExtResource("1_ball")

@@ -1,374 +1,426 @@
-[gd_scene load_steps=20 format=3 uid="uid://l5rjn8rcbgs7"]
+[gd_scene format=3 uid="uid://l5rjn8rcbgs7"]
 
-[ext_resource type="Texture2D" uid="uid://cygvgtb2efe2g" path="res://images/ElementSource.png" id="1_epypp"]
 [ext_resource type="Script" uid="uid://lo1bre0lpy2w" path="res://scripts/LevelState.gd" id="1_rj586"]
 [ext_resource type="Script" uid="uid://db6lm33h803wv" path="res://scripts/Camera.gd" id="1_x0ka3"]
 [ext_resource type="Script" uid="uid://xh0e5d3lj14e" path="res://scripts/ElementSource.gd" id="2_0e48y"]
-[ext_resource type="Script" path="res://scripts/CommonLabelGroup.gd" id="2_ir8iy"]
 [ext_resource type="Script" uid="uid://csuirlyl12unl" path="res://scripts/DestinationCircle.gd" id="3_4d7sh"]
-[ext_resource type="SpriteFrames" uid="uid://r6t4fiwohjp7" path="res://SpriteFrames/ElementSourceArrow.tres" id="3_epypp"]
-[ext_resource type="Theme" uid="uid://dwcbrrffvaosa" path="res://theme/state_label.tres" id="4_hqns4"]
-[ext_resource type="SpriteFrames" uid="uid://7r7iwjosu258" path="res://SpriteFrames/BounceFlat.tres" id="5_kdubu"]
 [ext_resource type="Script" uid="uid://c1ijpdu63rwha" path="res://scripts/EnergyWall.gd" id="5_q6r6c"]
-[ext_resource type="Theme" uid="uid://bhan4heo4qhpb" path="res://theme/hint_label.tres" id="5_x0ka3"]
-[ext_resource type="Texture2D" uid="uid://ccat63jcuwfmp" path="res://images/DestinationCircle.png" id="6_kdubu"]
-[ext_resource type="Texture2D" uid="uid://du60rjstwcb2h" path="res://images/DecelerationZone.png" id="13_0h7mo"]
 [ext_resource type="Script" uid="uid://claivnojwy5g6" path="res://scripts/DecZone.gd" id="13_nr8wp"]
-[ext_resource type="Script" path="res://scripts/LanguageToggle.gd" id="14_lang"]
+[ext_resource type="Script" uid="uid://bwh7d5bxaks17" path="res://scripts/LanguageToggle.gd" id="14_lang"]
+[ext_resource type="Script" path="res://scripts/Frame.gd" id="15_film"]
+[ext_resource type="Script" path="res://scripts/Imprint.gd" id="16_imprint"]
+[ext_resource type="Script" path="res://scripts/Annotation.gd" id="17_note"]
+[ext_resource type="Script" path="res://scripts/Beam.gd" id="19_beam"]
+[ext_resource type="Shader" path="res://shaders/boil.gdshader" id="20_boil"]
+[ext_resource type="Texture2D" path="res://images/art/collimator.png" id="21_launcher"]
+[ext_resource type="Texture2D" path="res://images/art/plate.png" id="22_wall"]
+[ext_resource type="Texture2D" path="res://images/art/reticle.png" id="23_goal"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_d21ai"]
-radius = 853.33
+[sub_resource type="CircleShape2D" id="CircleShape2D_goal"]
+radius = 85.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_q6r6c"]
-size = Vector2(350.02466, 1955)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(42, 235)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_4d7sh"]
-radius = 936.47
+[sub_resource type="CircleShape2D" id="CircleShape2D_touch"]
+radius = 112.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d2bti"]
 size = Vector2(174, 172)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_boil"]
+shader = ExtResource("20_boil")
+
 [node name="Node2D" type="Node2D"]
 
+[node name="Trails" type="Node2D" parent="."]
+z_index = -5
+
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(1, 0)
-offset = Vector2(960, 540)
+position = Vector2(1300, 225)
+zoom = Vector2(0.72, 0.72)
 script = ExtResource("1_x0ka3")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="LevelState" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = -2.0
-offset_right = 38.0
-offset_bottom = 40.0
-script = ExtResource("1_rj586")
-
-[node name="CommonLabelGroup" type="Control" parent="CanvasLayer/LevelState"]
-anchors_preset = 0
-offset_top = -2.0
-offset_right = 40.0
-offset_bottom = 38.0
-script = ExtResource("2_ir8iy")
-gradient_colors = Array[Color]([Color(0.35421458, 0.6346909, 0.7854926, 1), Color(0.5170341, 0.561762, 0.9152247, 1), Color(0.3529412, 0.63529414, 0.78431374, 1), Color(0.3215116, 0.69067013, 0.37347743, 1)])
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LevelState/CommonLabelGroup"]
-layout_mode = 0
-offset_left = 482.0
-offset_top = 855.0
-offset_right = 1882.0
-offset_bottom = 1390.0
-
-[node name="RemainBalls" type="HBoxContainer" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer"]
-layout_mode = 2
-alignment = 2
-
-[node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/RemainBalls"]
-layout_mode = 2
-theme = ExtResource("4_hqns4")
-text = "HUD_BALLS_LEFT"
-
-[node name="Empty" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/RemainBalls"]
-layout_mode = 2
-text = "            "
-
-[node name="Value" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/RemainBalls"]
-layout_mode = 2
-theme = ExtResource("4_hqns4")
-text = "0"
-
-[node name="Score" type="HBoxContainer" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer"]
-layout_mode = 2
-alignment = 2
-
-[node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
-layout_mode = 2
-theme = ExtResource("4_hqns4")
-text = "HUD_SCORE"
-
-[node name="Empty" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
-layout_mode = 2
-text = "            "
-
-[node name="Value" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
-layout_mode = 2
-theme = ExtResource("4_hqns4")
-text = "0"
-
-[node name="Empty2" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
-layout_mode = 2
-text = "            "
-
-[node name="TargetValue" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
-layout_mode = 2
-theme = ExtResource("4_hqns4")
-text = "( 36200 )"
-
-[node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("4_hqns4")
-text = "HUD_REPLAY"
-horizontal_alignment = 2
-
-[node name="LanguageToggle" type="Button" parent="CanvasLayer"]
-auto_translate_mode = 2
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -240.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 84.0
-grow_horizontal = 0
-focus_mode = 0
-theme = ExtResource("4_hqns4")
-theme_override_font_sizes/font_size = 30
-text = "中文 / EN"
-script = ExtResource("14_lang")
-
-[node name="HintLabel5" type="Label" parent="."]
-offset_left = -20.000002
-offset_top = 747.0
-offset_right = 607.0
-offset_bottom = 844.0
-rotation = -0.12926245
-theme = ExtResource("5_x0ka3")
-theme_override_font_sizes/font_size = 28
-text = "HINT_ROTATE"
-horizontal_alignment = 1
-
-[node name="HintLabel2" type="Label" parent="."]
-offset_left = 341.00003
-offset_top = 119.0
-offset_right = 993.0
-offset_bottom = 216.0
-rotation = 0.05406394
-theme = ExtResource("5_x0ka3")
-theme_override_font_sizes/font_size = 28
-text = "HINT_ENERGY_WALL"
-horizontal_alignment = 1
-
-[node name="HintLabel6" type="Label" parent="."]
-offset_left = 422.0
-offset_top = 461.99994
-offset_right = 1049.0
-offset_bottom = 558.9999
-rotation = -0.1287853
-theme = ExtResource("5_x0ka3")
-theme_override_font_sizes/font_size = 20
-text = "HINT_DEC_ZONE"
-horizontal_alignment = 1
-
-[node name="HintLabel" type="Label" parent="."]
-offset_left = -111.0
-offset_top = 237.0
-offset_right = 516.0
-offset_bottom = 334.0
-theme = ExtResource("5_x0ka3")
-theme_override_font_sizes/font_size = 28
-text = "HINT_LAUNCH"
-horizontal_alignment = 1
-
-[node name="HintLabel4" type="Label" parent="."]
-offset_left = 271.00006
-offset_top = 934.00006
-offset_right = 1671.0
-offset_bottom = 1081.0
-rotation = -0.0002328381
-scale = Vector2(1.0000114, 0.99172926)
-theme = ExtResource("4_hqns4")
-text = "HINT_CAMERA"
-horizontal_alignment = 1
-
-[node name="HintLabel7" type="Label" parent="."]
-offset_left = 1677.0
-offset_top = 532.0
-offset_right = 3077.0
-offset_bottom = 628.99994
-rotation = -0.035163544
-theme = ExtResource("4_hqns4")
-text = "HINT_SPEED_SCORE"
-
-[node name="HintLabel3" type="Label" parent="."]
-offset_left = 1217.0
-offset_top = 416.00003
-offset_right = 2617.0
-offset_bottom = 513.0
-rotation = -0.035163544
-theme = ExtResource("4_hqns4")
-text = "HINT_GOAL"
-
-[node name="DestinationCircle" type="Area2D" parent="."]
+[node name="DestinationCircle" type="Area2D" parent="." groups=["power"]]
 position = Vector2(1944.0001, 412.00003)
-rotation = -0.0025059893
-scale = Vector2(0.1, 0.1)
 collision_mask = 3
 priority = 99
 script = ExtResource("3_4d7sh")
-gradient_colors = Array[Color]([Color(0.3215116, 0.69067013, 0.37347743, 1), Color(0.35421458, 0.6346909, 0.7854926, 1), Color(0.5170341, 0.561762, 0.9152247, 1), Color(0.3529412, 0.63529414, 0.78431374, 1)])
-scale_values = Array[float]([0.8, 1.0, 1.2, 1.0])
+scale_values = Array[float]([1.0])
+spin_speed = 0.05
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DestinationCircle"]
-position = Vector2(7.6914063, 23.077393)
-shape = SubResource("CircleShape2D_d21ai")
+shape = SubResource("CircleShape2D_goal")
 
 [node name="Sprite2D" type="Sprite2D" parent="DestinationCircle"]
-texture = ExtResource("6_kdubu")
+texture = ExtResource("23_goal")
 
-[node name="ElementSource" type="Sprite2D" parent="."]
+[node name="Beam" type="Node2D" parent="." groups=["power"]]
+z_index = -5
 position = Vector2(193, 158)
-scale = Vector2(0.06, 0.079)
+script = ExtResource("19_beam")
+
+[node name="ElementSource" type="Sprite2D" parent="." groups=["power"]]
+position = Vector2(193, 158)
+texture = ExtResource("21_launcher")
+offset = Vector2(20, 0)
 script = ExtResource("2_0e48y")
+trails_path = NodePath("../Trails")
 
-[node name="Foreground" type="Sprite2D" parent="ElementSource"]
-texture = ExtResource("1_epypp")
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="ElementSource"]
-sprite_frames = ExtResource("3_epypp")
-autoplay = "default"
-
-[node name="EnergyWall" type="AnimatableBody2D" parent="."]
+[node name="EnergyWall" type="AnimatableBody2D" parent="." groups=["scan_in"]]
 position = Vector2(647, 182)
 rotation = -0.40297922
-scale = Vector2(0.12, 0.12)
 script = ExtResource("5_q6r6c")
+speed_boost = 1.2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall"]
-rotation = 0.00055759767
-sprite_frames = ExtResource("5_kdubu")
-autoplay = "default"
+[node name="Sprite2D" type="Sprite2D" parent="EnergyWall"]
+position = Vector2(-4.5, 0.4)
+texture = ExtResource("22_wall")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall"]
-position = Vector2(-37.496094, 3.574585)
-rotation = 0.0026840898
-shape = SubResource("RectangleShape2D_q6r6c")
+position = Vector2(-4.5, 0.4)
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="TouchArea" type="Area2D" parent="EnergyWall"]
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall/TouchArea"]
-shape = SubResource("CircleShape2D_4d7sh")
+shape = SubResource("CircleShape2D_touch")
 
-[node name="EnergyWall2" type="AnimatableBody2D" parent="."]
+[node name="EnergyWall2" type="AnimatableBody2D" parent="." groups=["scan_in"]]
 position = Vector2(234.00003, 574)
 rotation = -0.56799895
-scale = Vector2(0.12, 0.12)
 script = ExtResource("5_q6r6c")
 speed_boost = 2.0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall2"]
-sprite_frames = ExtResource("5_kdubu")
-autoplay = "default"
+[node name="Sprite2D" type="Sprite2D" parent="EnergyWall2"]
+position = Vector2(-4.5, 0.4)
+texture = ExtResource("22_wall")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall2"]
-position = Vector2(-37.496094, 3.574585)
-rotation = 0.0026840898
-shape = SubResource("RectangleShape2D_q6r6c")
+position = Vector2(-4.5, 0.4)
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="TouchArea" type="Area2D" parent="EnergyWall2"]
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall2/TouchArea"]
-shape = SubResource("CircleShape2D_4d7sh")
+shape = SubResource("CircleShape2D_touch")
 
-[node name="EnergyWall3" type="AnimatableBody2D" parent="."]
+[node name="EnergyWall3" type="AnimatableBody2D" parent="." groups=["scan_in"]]
 position = Vector2(2361.0002, 143)
 rotation = -1.2382703
-scale = Vector2(0.12, 0.12)
 script = ExtResource("5_q6r6c")
 speed_boost = 2.2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall3"]
-sprite_frames = ExtResource("5_kdubu")
-autoplay = "default"
+[node name="Sprite2D" type="Sprite2D" parent="EnergyWall3"]
+position = Vector2(-4.5, 0.4)
+texture = ExtResource("22_wall")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall3"]
-position = Vector2(-37.496094, 3.574585)
-rotation = 0.0026840898
-shape = SubResource("RectangleShape2D_q6r6c")
+position = Vector2(-4.5, 0.4)
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="TouchArea" type="Area2D" parent="EnergyWall3"]
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall3/TouchArea"]
-shape = SubResource("CircleShape2D_4d7sh")
+shape = SubResource("CircleShape2D_touch")
 
-[node name="DecZone" type="Area2D" parent="."]
+[node name="DecZone" type="Area2D" parent="." groups=["scan_in"]]
 position = Vector2(761, 511)
 script = ExtResource("13_nr8wp")
 deceleration_rate = 1.5
-min_opacity = 0.1
+opacity_speed = 1.2
+min_opacity = 0.85
 
-[node name="Sprite2D" type="Sprite2D" parent="DecZone"]
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("13_0h7mo")
+[node name="Visual" type="ColorRect" parent="DecZone"]
+material = SubResource("ShaderMaterial_boil")
+offset_left = -87.0
+offset_top = -86.0
+offset_right = 87.0
+offset_bottom = 86.0
+mouse_filter = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DecZone"]
 shape = SubResource("RectangleShape2D_d2bti")
 
-[node name="EnergyWall4" type="AnimatableBody2D" parent="."]
+[node name="EnergyWall4" type="AnimatableBody2D" parent="." groups=["scan_in"]]
 position = Vector2(923.99994, 547)
 rotation = -0.20620963
-scale = Vector2(0.12, 0.12)
 script = ExtResource("5_q6r6c")
 speed_boost = 2.4
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall4"]
-sprite_frames = ExtResource("5_kdubu")
-autoplay = "default"
+[node name="Sprite2D" type="Sprite2D" parent="EnergyWall4"]
+position = Vector2(-4.5, 0.4)
+texture = ExtResource("22_wall")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall4"]
-position = Vector2(-37.496094, 3.574585)
-rotation = 0.0026840898
-shape = SubResource("RectangleShape2D_q6r6c")
+position = Vector2(-4.5, 0.4)
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="TouchArea" type="Area2D" parent="EnergyWall4"]
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall4/TouchArea"]
-shape = SubResource("CircleShape2D_4d7sh")
+shape = SubResource("CircleShape2D_touch")
 
-[node name="DecZone2" type="Area2D" parent="."]
+[node name="DecZone2" type="Area2D" parent="." groups=["scan_in"]]
 position = Vector2(2149, 332)
 script = ExtResource("13_nr8wp")
 deceleration_rate = 1.5
-min_opacity = 0.1
+opacity_speed = 1.2
+min_opacity = 0.85
 
-[node name="Sprite2D" type="Sprite2D" parent="DecZone2"]
-scale = Vector2(0.1, 0.1)
-texture = ExtResource("13_0h7mo")
+[node name="Visual" type="ColorRect" parent="DecZone2"]
+material = SubResource("ShaderMaterial_boil")
+offset_left = -87.0
+offset_top = -86.0
+offset_right = 87.0
+offset_bottom = 86.0
+mouse_filter = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DecZone2"]
 shape = SubResource("RectangleShape2D_d2bti")
 
-[node name="EnergyWall5" type="AnimatableBody2D" parent="."]
+[node name="EnergyWall5" type="AnimatableBody2D" parent="." groups=["scan_in"]]
 position = Vector2(1585, -213.99997)
 rotation = -1.3304579
-scale = Vector2(0.12, 0.12)
 script = ExtResource("5_q6r6c")
 speed_boost = 2.4
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EnergyWall5"]
-sprite_frames = ExtResource("5_kdubu")
-autoplay = "default"
+[node name="Sprite2D" type="Sprite2D" parent="EnergyWall5"]
+position = Vector2(-4.5, 0.4)
+texture = ExtResource("22_wall")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall5"]
-position = Vector2(-37.496094, 3.574585)
-rotation = 0.0026840898
-shape = SubResource("RectangleShape2D_q6r6c")
+position = Vector2(-4.5, 0.4)
+shape = SubResource("RectangleShape2D_wall")
 
 [node name="TouchArea" type="Area2D" parent="EnergyWall5"]
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnergyWall5/TouchArea"]
-shape = SubResource("CircleShape2D_4d7sh")
+shape = SubResource("CircleShape2D_touch")
 
+[node name="Film" type="CanvasLayer" parent="."]
+
+[node name="Frame" type="Control" parent="Film"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("15_film")
+
+[node name="LevelState" type="Control" parent="Film"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1.0
+offset_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_rj586")
+
+[node name="EdgeLayer" type="SubViewportContainer" parent="Film"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+stretch_shrink = 3
+
+[node name="View" type="SubViewport" parent="Film/EdgeLayer"]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+canvas_item_default_texture_filter = 0
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="LangLabel" type="Label" parent="Film/EdgeLayer/View"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -80.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 30.0
+grow_horizontal = 0
+auto_translate_mode = 2
+horizontal_alignment = 2
+text = "中文"
+
+[node name="ControlsLabel" type="Label" parent="Film/EdgeLayer/View"]
+offset_left = 16.0
+offset_top = 330.0
+offset_right = 400.0
+offset_bottom = 344.0
+text = "HUD_CONTROLS"
+
+[node name="BallsLabel" type="Label" parent="Film/EdgeLayer/View"]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -240.0
+offset_top = 330.0
+offset_right = -16.0
+offset_bottom = 344.0
+grow_horizontal = 0
+auto_translate_mode = 2
+horizontal_alignment = 2
+uppercase = true
+text = "Balls"
+
+[node name="SpeedReadout" type="Label" parent="Film/EdgeLayer/View" groups=["annotation"]]
+unique_name_in_owner = true
+offset_right = 90.0
+offset_bottom = 14.0
+auto_translate_mode = 2
+theme_override_colors/font_color = Color(0.941, 0.627, 0.251, 1)
+script = ExtResource("17_note")
+anchor_path = NodePath("../../../../DestinationCircle")
+offset = Vector2(-30, 54)
+text = ""
+
+[node name="BoostEnergyWall" type="Label" parent="Film/EdgeLayer/View" groups=["annotation"]]
+offset_right = 30.0
+offset_bottom = 14.0
+script = ExtResource("17_note")
+anchor_path = NodePath("../../../../EnergyWall")
+offset = Vector2(15, -6)
+literal = "×1.2"
+text = ""
+
+[node name="BoostEnergyWall2" type="Label" parent="Film/EdgeLayer/View" groups=["annotation"]]
+offset_right = 30.0
+offset_bottom = 14.0
+script = ExtResource("17_note")
+anchor_path = NodePath("../../../../EnergyWall2")
+offset = Vector2(15, -6)
+literal = "×2.0"
+text = ""
+
+[node name="BoostEnergyWall3" type="Label" parent="Film/EdgeLayer/View" groups=["annotation"]]
+offset_right = 30.0
+offset_bottom = 14.0
+script = ExtResource("17_note")
+anchor_path = NodePath("../../../../EnergyWall3")
+offset = Vector2(-12, -24)
+literal = "×2.2"
+text = ""
+
+[node name="BoostEnergyWall4" type="Label" parent="Film/EdgeLayer/View" groups=["annotation"]]
+offset_right = 30.0
+offset_bottom = 14.0
+script = ExtResource("17_note")
+anchor_path = NodePath("../../../../EnergyWall4")
+offset = Vector2(12, -6)
+literal = "×2.4"
+text = ""
+
+[node name="BoostEnergyWall5" type="Label" parent="Film/EdgeLayer/View" groups=["annotation"]]
+offset_right = 30.0
+offset_bottom = 14.0
+script = ExtResource("17_note")
+anchor_path = NodePath("../../../../EnergyWall5")
+offset = Vector2(-12, -22)
+literal = "×2.4"
+text = ""
+
+[node name="Imprint" type="Control" parent="Film/EdgeLayer/View"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("16_imprint")
+
+[node name="Backing" type="ColorRect" parent="Film/EdgeLayer/View/Imprint"]
+visible = false
+layout_mode = 0
+mouse_filter = 2
+color = Color(0.56, 0.56, 0.54, 1)
+
+[node name="Fill" type="ColorRect" parent="Film/EdgeLayer/View/Imprint/Backing"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = -1.0
+mouse_filter = 2
+color = Color(0.043, 0.043, 0.045, 1)
+
+[node name="Lines" type="VBoxContainer" parent="Film/EdgeLayer/View/Imprint"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -560.0
+offset_top = -124.0
+offset_right = -28.0
+offset_bottom = -50.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 2
+
+[node name="Big" type="Label" parent="Film/EdgeLayer/View/Imprint/Lines"]
+auto_translate_mode = 2
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Guide The Ball"
+uppercase = true
+
+[node name="Rule" type="ColorRect" parent="Film/EdgeLayer/View/Imprint/Lines"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.56, 0.56, 0.54, 1)
+
+[node name="Small" type="Label" parent="Film/EdgeLayer/View/Imprint/Lines"]
+auto_translate_mode = 2
+layout_mode = 2
+text = "Press Space"
+uppercase = true
+
+[node name="Rules" type="Label" parent="Film/EdgeLayer/View/Imprint/Lines"]
+layout_mode = 2
+text = "HUD_RULES"
+
+[node name="LanguageToggle" type="Button" parent="Film"]
+auto_translate_mode = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 36.0
+offset_right = -36.0
+offset_bottom = 104.0
+grow_horizontal = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+flat = true
+script = ExtResource("14_lang")
+label_path = NodePath("../EdgeLayer/View/LangLabel")
 [connection signal="input_event" from="EnergyWall/TouchArea" to="EnergyWall" method="_on_touch_area_input_event"]
 [connection signal="input_event" from="EnergyWall2/TouchArea" to="EnergyWall2" method="_on_touch_area_input_event"]
 [connection signal="input_event" from="EnergyWall3/TouchArea" to="EnergyWall3" method="_on_touch_area_input_event"]

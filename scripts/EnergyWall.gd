@@ -6,6 +6,8 @@ extends AnimatableBody2D
 @export var rotation_step: float = 5.0  # 每次滚轮旋转的角度（度）
 @export var rotation_smoothing: float = 100.0  # 旋转平滑速度（越大越快）
 
+const HOVER_MODULATE := Color(1.35, 1.35, 1.35)
+
 var mouse_inside: bool = false  # 鼠标是否在 TouchArea 内
 var target_rotation: float = 0.0  # 目标旋转（弧度）
 var interaction_area: Area2D
@@ -32,11 +34,11 @@ func _ready():
 
 func _on_mouse_entered():
 	mouse_inside = true
-	print("Mouse entered TouchArea")
+	$Sprite2D.modulate = HOVER_MODULATE
 
 func _on_mouse_exited():
 	mouse_inside = false
-	print("Mouse exited TouchArea")
+	$Sprite2D.modulate = Color.WHITE
 
 func _on_touch_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if mouse_inside and event is InputEventMouseButton:

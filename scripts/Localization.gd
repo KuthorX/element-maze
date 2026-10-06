@@ -7,6 +7,8 @@ const SETTINGS_KEY_LOCALE := "locale"
 const LOCALE_EN := "en"
 const LOCALE_ZH := "zh"
 
+signal locale_changed(locale: String)
+
 var current_locale: String = LOCALE_EN
 
 
@@ -24,6 +26,7 @@ func _apply_locale(locale: String) -> void:
 	current_locale = locale
 	TranslationServer.set_locale(locale)
 	DisplayServer.window_set_title(tr("GAME_TITLE"))
+	locale_changed.emit(locale)
 	GameLogger.info("Locale set to %s" % locale, "Localization")
 
 

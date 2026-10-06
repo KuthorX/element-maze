@@ -6,6 +6,7 @@ extends Area2D
 @export var scale_step: float = 1  # 缩放变化速度
 @export var snap_distance_px: float = 0.0  # 吸附距离（像素）
 @export var move_duration: float = 1.0  # 吸入效果持续时间（秒）
+@export var spin_speed: float = 0.0  # 精灵自转速度（弧度/秒）
 
 var _color_index_t: float = 0.0
 var _scale_index_t: float = 0.0
@@ -47,6 +48,9 @@ func _process(delta: float):
 		if _sprite:
 			_sprite.modulate = Color(c.r, c.g, c.b, _sprite.modulate.a)
 	
+	if _sprite and spin_speed != 0.0:
+		_sprite.rotation += spin_speed * delta
+
 	# 缩放动画
 	if scale_values.size() > 0:
 		var scale_count = scale_values.size()
@@ -104,6 +108,8 @@ func _on_absorb_complete(ball: CharacterBody2D, initial_speed: float):
 	ball.global_position = global_position
 	last_captured_speed = initial_speed
 	_add_score(int(ceil(initial_speed)))
+	if is_instance_valid(ball.trail):
+		ball.trail.score = initial_speed
 	_capturing.erase(ball)
 	ball.queue_free()
 	print("Ball absorbed, score added: ", int(ceil(initial_speed)))

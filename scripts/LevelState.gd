@@ -2,155 +2,247 @@ extends Control
 
 signal reset_requested
 
+enum State { TITLE, PLAYING, ENDED }
+
 @export var score_tween_duration: float = 5
 @export var initial_remain_balls: int = 10
+@export var goal_score: int = 36200
+## A ball slower than this (px/s) counts as settled when deciding the round is over.
+@export var settled_speed: float = 25.0
+## Grace period after the last ball settles before the result is shown.
+@export var end_delay: float = 1.2
 
 var score: int = 0
 var display_score: int = 0
 var target_score: int = 0
 var score_tween: Tween
 var remain_balls: int = 0
+var state: State = State.TITLE
+
+var _settled_time: float = 0.0
+
+const FADED_TRACK_ALPHA := 0.15
+const SCAN_IN_STEP := 0.12
+## On the result screen the level is "powered off" to this grey.
+const POWERED_OFF := Color(0.3, 0.3, 0.3)
+const POWER_OFF_TIME := 0.4
+
+@onready var _imprint: Control = %Imprint
+@onready var _balls_label: Label = %BallsLabel
+@onready var _speed_readout: Label = %SpeedReadout
+
+
+# Joined on enter_tree (not _ready) so world nodes that look this node up in their own
+# _ready find it regardless of tree order.
+func _enter_tree() -> void:
+	add_to_group("level_score")
+
 
 func _ready() -> void:
-	add_to_group("level_score")
 	display_score = score
 	target_score = score
 	remain_balls = initial_remain_balls
 	_update_remain_balls_display()
-	
-	# 连接重置信号
 	reset_requested.connect(_reset_to_initial_values)
+	_imprint.show_title()
+	_hide_level()
+
+
+func is_playing() -> bool:
+	return state == State.PLAYING
+
 
 func add_score(amount: int) -> void:
 	if amount == 0:
 		return
-	
 	score += amount
 	_update_score_animation()
 	_print_score()
 
+
 func set_score(new_score: int) -> void:
 	if new_score == score:
 		return
-	
 	score = new_score
 	_update_score_animation()
 	_print_score()
 
+
 func _update_score_animation() -> void:
 	target_score = score
-	
-	# 如果没有动画在进行，创建新动画
-	if not score_tween or not score_tween.is_valid():
-		_start_score_animation()
-	else:
-		# 如果动画正在进行，重新计算剩余时间和目标
-		_restart_score_animation()
-
-func _start_score_animation() -> void:
-	# 停止之前的动画
 	if score_tween:
 		score_tween.kill()
-	
-	# 创建新的动画，使用缓动效果
-	score_tween = create_tween()
-	score_tween.set_ease(Tween.EASE_OUT)  # 缓出效果：开始快，结束慢
-	score_tween.set_trans(Tween.TRANS_EXPO)  # 指数过渡，更明显的缓动效果
-	score_tween.tween_method(_update_display_score, display_score, target_score, score_tween_duration)
-	score_tween.tween_callback(_on_score_animation_finished)
-
-func _restart_score_animation() -> void:
-	# 停止当前动画
-	if score_tween:
-		score_tween.kill()
-	
-	# 重新开始动画，从当前显示分数到新的目标分数
 	score_tween = create_tween()
 	score_tween.set_ease(Tween.EASE_OUT)
 	score_tween.set_trans(Tween.TRANS_EXPO)
 	score_tween.tween_method(_update_display_score, display_score, target_score, score_tween_duration)
 	score_tween.tween_callback(_on_score_animation_finished)
 
+
 func _update_display_score(value: int) -> void:
 	display_score = int(value)
 	_update_score_display()
 
+
 func _on_score_animation_finished() -> void:
-	# 动画完成，确保显示分数等于目标分数
 	display_score = target_score
 	_update_score_display()
 
+
 func _update_score_display() -> void:
-	var score_node = _find_child_node_recursive(self, "Score")
-	if score_node:
-		var score_value_node = _find_child_node_recursive(score_node, "Value")
-		if score_value_node and score_value_node.has_method("set_text"):
-			score_value_node.set_text(str(display_score))
-		elif score_value_node and "text" in score_value_node:
-			score_value_node.text = str(display_score)
+	_imprint.set_score(display_score)
+
 
 func consume_ball() -> bool:
 	"""消耗一个球，返回是否成功消耗"""
 	if remain_balls <= 0:
 		GameLogger.info("No balls remaining, cannot spawn", "LevelState")
 		return false
-	
 	remain_balls -= 1
 	_update_remain_balls_display()
 	GameLogger.info("Ball consumed, remaining: %d" % remain_balls, "LevelState")
 	return true
 
+
 func get_remain_balls() -> int:
-	"""获取剩余球数"""
 	return remain_balls
 
-func _update_remain_balls_display() -> void:
-	"""更新剩余球数显示"""
-	var remain_balls_node = _find_child_node_recursive(self, "RemainBalls")
-	if remain_balls_node:
-		var remain_balls_value_node = _find_child_node_recursive(remain_balls_node, "Value")
-		if remain_balls_value_node and remain_balls_value_node.has_method("set_text"):
-			remain_balls_value_node.set_text(str(remain_balls))
-		elif remain_balls_value_node and "text" in remain_balls_value_node:
-			remain_balls_value_node.text = str(remain_balls)
 
-func _find_child_node_recursive(parent: Node, node_name: String) -> Node:
-	"""递归查找子节点"""
-	if parent.name == node_name:
-		return parent
-	
-	for child in parent.get_children():
-		var result = _find_child_node_recursive(child, node_name)
-		if result:
-			return result
-	
-	return null
+## "BALLS ●●●●●●○○○○": filled = still to launch.
+func _update_remain_balls_display() -> void:
+	var used := initial_remain_balls - remain_balls
+	_balls_label.text = "%s  %s%s" % [tr("HUD_BALLS_LEFT"), "●".repeat(remain_balls), "○".repeat(used)]
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		_update_remain_balls_display()
+
+
+func _process(delta: float) -> void:
+	if state != State.PLAYING:
+		return
+	_update_speed_readout()
+	if score >= goal_score:
+		_end_round()
+		return
+	if remain_balls > 0 or _any_ball_active():
+		_settled_time = 0.0
+		return
+	_settled_time += delta
+	if _settled_time >= end_delay:
+		_end_round()
+
+
+## Reticle readout: the speed of the fastest ball in flight (what it would score now).
+func _update_speed_readout() -> void:
+	var fastest := 0.0
+	for ball in get_tree().get_nodes_in_group("color_ball"):
+		fastest = maxf(fastest, ball.velocity.length())
+	_speed_readout.text = tr("HUD_SPEED") % format_number(int(fastest))
+
+
+func _any_ball_active() -> bool:
+	for ball in get_tree().get_nodes_in_group("color_ball"):
+		# A ball being absorbed by the goal shrinks first; its score is still pending.
+		if ball.velocity.length() > settled_speed or ball.scale.x < 0.999:
+			return true
+	return false
+
+
+func _end_round() -> void:
+	state = State.ENDED
+	_highlight_best_track()
+	_power_level(POWERED_OFF)
+	_speed_readout.text = ""
+	_imprint.show_end(score >= goal_score, score, goal_score)
+	GameLogger.info("Round ended with score %d" % score, "LevelState")
+
+
+## On the result screen every track fades back except the best one: the highest-scoring
+## ball, or the longest track if no ball reached the goal.
+func _highlight_best_track() -> void:
+	var best: BubbleTrack = null
+	for track in get_tree().get_nodes_in_group("ball_track"):
+		if best == null or [track.score, track.length()] > [best.score, best.length()]:
+			best = track
+	for track in get_tree().get_nodes_in_group("track"):
+		track.modulate.a = 1.0 if track == best else FADED_TRACK_ALPHA
+
+
+## Tints every level piece (walls, zones, launcher, goal) towards `tint`.
+func _power_level(tint: Color) -> void:
+	var tween := create_tween().set_parallel()
+	for piece in get_tree().get_nodes_in_group("scan_in") + get_tree().get_nodes_in_group("power"):
+		tween.tween_property(piece, "modulate", Color(tint, piece.modulate.a), POWER_OFF_TIME)
+
+
+## Level pieces "scan in" one after another, left to right, when the first round starts.
+func _scan_in_level() -> void:
+	var pieces := get_tree().get_nodes_in_group("scan_in")
+	pieces.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
+	var tween := create_tween()
+	for piece in pieces:
+		tween.tween_property(piece, "modulate:a", 1.0, SCAN_IN_STEP)
+
+
+func _hide_level() -> void:
+	for piece in get_tree().get_nodes_in_group("scan_in"):
+		piece.modulate.a = 0.0
+
+
+func _start_round() -> void:
+	if state == State.TITLE:
+		_scan_in_level()
+	elif state == State.ENDED:
+		_power_level(Color.WHITE)
+	state = State.PLAYING
+	_settled_time = 0.0
+	_imprint.show_play(goal_score)
+	_update_score_display()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if state == State.TITLE and _is_start_event(event):
+		get_viewport().set_input_as_handled()
+		_start_round()
+
+
+func _is_start_event(event: InputEvent) -> bool:
+	if event.is_action_pressed("ui_accept"):
+		return true
+	return event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT
+
 
 func _input(event: InputEvent) -> void:
-	"""处理输入事件"""
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_R:
-			reset_requested.emit()
+	if state != State.TITLE and event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
+		reset_requested.emit()
+
+
 
 func _reset_to_initial_values() -> void:
 	"""重置分数和剩余球数为初始值"""
-	# 停止当前的分数动画
 	if score_tween and score_tween.is_valid():
 		score_tween.kill()
-	
-	# 重置分数
 	score = 0
 	display_score = 0
 	target_score = 0
-	
-	# 重置剩余球数
 	remain_balls = initial_remain_balls
-	
-	# 更新显示
 	_update_score_display()
 	_update_remain_balls_display()
-	
+	_start_round()
 	GameLogger.info("Reset to initial values: Score=0, RemainBalls=%d" % initial_remain_balls, "LevelState")
+
 
 func _print_score() -> void:
 	GameLogger.info("Score: %d" % score, "LevelScore")
+
+
+## 36200 -> "36,200".
+static func format_number(value: int) -> String:
+	var digits := str(absi(value))
+	var out := ""
+	while digits.length() > 3:
+		out = "," + digits.substr(digits.length() - 3) + out
+		digits = digits.substr(0, digits.length() - 3)
+	return ("-" if value < 0 else "") + digits + out

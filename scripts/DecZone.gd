@@ -6,14 +6,14 @@ extends Area2D
 @export var max_opacity: float = 1.0  # 最大不透明度（0.0-1.0）
 
 var bodies_inside: Array[CharacterBody2D] = []  # 跟踪进入的 CharacterBody2D
-var _sprite: Sprite2D
+var _sprite: CanvasItem
 var _opacity_timer: float = 0.0  # 用于不透明度变化的计时器
 
 func _ready():
 	# 获取 Sprite2D 子节点
-	_sprite = $Sprite2D if has_node("Sprite2D") else null
+	_sprite = $Visual if has_node("Visual") else null
 	if not _sprite:
-		push_warning("Sprite2D node not found")
+		push_warning("Visual node not found")
 	
 	# 连接信号
 	if not is_connected("body_entered", _on_body_entered):
