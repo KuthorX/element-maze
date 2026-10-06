@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://l5rjn8rcbgs7"]
+[gd_scene load_steps=20 format=3 uid="uid://l5rjn8rcbgs7"]
 
 [ext_resource type="Texture2D" uid="uid://cygvgtb2efe2g" path="res://images/ElementSource.png" id="1_epypp"]
 [ext_resource type="Script" uid="uid://lo1bre0lpy2w" path="res://scripts/LevelState.gd" id="1_rj586"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://ccat63jcuwfmp" path="res://images/DestinationCircle.png" id="6_kdubu"]
 [ext_resource type="Texture2D" uid="uid://du60rjstwcb2h" path="res://images/DecelerationZone.png" id="13_0h7mo"]
 [ext_resource type="Script" uid="uid://claivnojwy5g6" path="res://scripts/DecZone.gd" id="13_nr8wp"]
+[ext_resource type="Script" path="res://scripts/LanguageToggle.gd" id="14_lang"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d21ai"]
 radius = 853.33
@@ -66,7 +67,7 @@ alignment = 2
 [node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/RemainBalls"]
 layout_mode = 2
 theme = ExtResource("4_hqns4")
-text = "Remain Balls"
+text = "HUD_BALLS_LEFT"
 
 [node name="Empty" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/RemainBalls"]
 layout_mode = 2
@@ -84,7 +85,7 @@ alignment = 2
 [node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
 layout_mode = 2
 theme = ExtResource("4_hqns4")
-text = "Score"
+text = "HUD_SCORE"
 
 [node name="Empty" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer/Score"]
 layout_mode = 2
@@ -107,8 +108,24 @@ text = "( 36200 )"
 [node name="Label" type="Label" parent="CanvasLayer/LevelState/CommonLabelGroup/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_hqns4")
-text = "Press R to Replay"
+text = "HUD_REPLAY"
 horizontal_alignment = 2
+
+[node name="LanguageToggle" type="Button" parent="CanvasLayer"]
+auto_translate_mode = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -240.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 84.0
+grow_horizontal = 0
+focus_mode = 0
+theme = ExtResource("4_hqns4")
+theme_override_font_sizes/font_size = 30
+text = "中文 / EN"
+script = ExtResource("14_lang")
 
 [node name="HintLabel5" type="Label" parent="."]
 offset_left = -20.000002
@@ -118,7 +135,7 @@ offset_bottom = 844.0
 rotation = -0.12926245
 theme = ExtResource("5_x0ka3")
 theme_override_font_sizes/font_size = 28
-text = "Use Mouse Wheel to ROTATE it !"
+text = "HINT_ROTATE"
 horizontal_alignment = 1
 
 [node name="HintLabel2" type="Label" parent="."]
@@ -129,8 +146,7 @@ offset_bottom = 216.0
 rotation = 0.05406394
 theme = ExtResource("5_x0ka3")
 theme_override_font_sizes/font_size = 28
-text = "This is Energy Wall
-It can INCREASE ball speed"
+text = "HINT_ENERGY_WALL"
 horizontal_alignment = 1
 
 [node name="HintLabel6" type="Label" parent="."]
@@ -141,8 +157,7 @@ offset_bottom = 558.9999
 rotation = -0.1287853
 theme = ExtResource("5_x0ka3")
 theme_override_font_sizes/font_size = 20
-text = "AVOID pass here since it will 
-DECREASE ball speed !"
+text = "HINT_DEC_ZONE"
 horizontal_alignment = 1
 
 [node name="HintLabel" type="Label" parent="."]
@@ -152,8 +167,7 @@ offset_right = 516.0
 offset_bottom = 334.0
 theme = ExtResource("5_x0ka3")
 theme_override_font_sizes/font_size = 28
-text = "Press Space to 
-LAUNCH Balls !"
+text = "HINT_LAUNCH"
 horizontal_alignment = 1
 
 [node name="HintLabel4" type="Label" parent="."]
@@ -164,8 +178,7 @@ offset_bottom = 1081.0
 rotation = -0.0002328381
 scale = Vector2(1.0000114, 0.99172926)
 theme = ExtResource("4_hqns4")
-text = "If you want to SEE MORE then
-Press Left Mouse to MOVE Camera !"
+text = "HINT_CAMERA"
 horizontal_alignment = 1
 
 [node name="HintLabel7" type="Label" parent="."]
@@ -175,7 +188,7 @@ offset_right = 3077.0
 offset_bottom = 628.99994
 rotation = -0.035163544
 theme = ExtResource("4_hqns4")
-text = "Score will higher as Ball SPEED higher !"
+text = "HINT_SPEED_SCORE"
 
 [node name="HintLabel3" type="Label" parent="."]
 offset_left = 1217.0
@@ -184,7 +197,7 @@ offset_right = 2617.0
 offset_bottom = 513.0
 rotation = -0.035163544
 theme = ExtResource("4_hqns4")
-text = "Make sure ALL Balls run into HERE ! "
+text = "HINT_GOAL"
 
 [node name="DestinationCircle" type="Area2D" parent="."]
 position = Vector2(1944.0001, 412.00003)

@@ -11,10 +11,18 @@ config_version=5
 [application]
 
 config/name="Guide The Ball"
+config/name_localized={
+"en": "Guide The Ball",
+"zh": "引导小球"
+}
 config/version="0.0.1"
 run/main_scene="uid://l5rjn8rcbgs7"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://mr4koh3ldq81"
+
+[autoload]
+
+Localization="*res://scripts/Localization.gd"
 
 [display]
 
@@ -29,3 +37,7 @@ press_z={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":90,"key_label":0,"unicode":122,"location":0,"echo":false,"script":null)
 ]
 }
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://i18n/translations.en.translation", "res://i18n/translations.zh.translation")

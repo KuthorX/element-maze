@@ -1,0 +1,20 @@
+keys,en,zh
+GAME_TITLE,Guide The Ball,引导小球
+HUD_BALLS_LEFT,Balls Left,剩余球数
+HUD_SCORE,Score,得分
+HUD_REPLAY,Press R to Replay,按 R 键重新开始
+HINT_LAUNCH,"Press Space to
+LAUNCH Balls!","按空格键
+发射小球！"
+HINT_ENERGY_WALL,"This is an Energy Wall
+It BOOSTS ball speed!","这是能量墙
+它能让小球加速！"
+HINT_ROTATE,Use the Mouse Wheel to ROTATE it!,把鼠标放上去，滚动滚轮来旋转它！
+HINT_DEC_ZONE,"AVOID this zone!
+It SLOWS balls down!","避开这里！
+它会让小球减速！"
+HINT_CAMERA,"Want to SEE MORE?
+Drag with the Left Mouse to MOVE the camera!","想看到更多？
+按住鼠标左键拖动来移动视角！"
+HINT_SPEED_SCORE,Faster balls score HIGHER!,球速越快，得分越高！
+HINT_GOAL,Get ALL the balls in HERE!,让所有小球都进入这里！
