@@ -23,5 +23,5 @@ func _input(event):
 		# 计算鼠标移动的偏移量
 		var mouse_delta = event.position - last_mouse_pos
 		# 更新相机位置（注意坐标系，鼠标向下移动应增加 Y 坐标）
-		position -= mouse_delta * zoom  # 考虑缩放比例
+		position -= mouse_delta / zoom  # 屏幕像素换算为世界坐标
 		last_mouse_pos = event.position
