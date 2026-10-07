@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Render every sound in the game.
+"""Render every sound in the game with the offline audiokit toolchain.
 
-    python3 tools/audio/build.py            # SFX + music
-    python3 tools/audio/build.py --sfx      # SFX only
+    arch -arm64 /tmp/audiokit/venv/bin/python tools/audio/build.py            # all
+    arch -arm64 /tmp/audiokit/venv/bin/python tools/audio/build.py --no-render  # reuse renders
 
-Writes audio/sfx/*.wav (16-bit mono) and audio/music/*.mp3 (LAME, 128 kbps, gapless
-header). Music is gain-matched to MUSIC_LUFS with ffmpeg's ebur128 meter.
-Requires numpy, scipy, ffmpeg and lame on PATH.
+1. compose.py writes MIDI + render specs into WORK (default /tmp/element-maze-audio).
+2. Each spec is rendered by /tmp/audiokit/render.py under the shared render lock
+   (Vital / Serum 2 presets, MS Basic.sf3 via fluidsynth, numpy voices, pedalboard FX).
+   Music loops come out seamless (tail folded onto the start), -18 LUFS, <= -1 dBTP.
+3. sfx.py layers the rendered source notes with numpy synthesis into audio/sfx/*.wav
+   (16-bit mono); the loops become audio/music/*.mp3 (LAME CBR 128 kbps, gapless header).
+Never plays audio and never opens a window. Needs lame and ffmpeg on PATH.
 """
 from __future__ import annotations
 
@@ -15,21 +19,21 @@ import os
 import re
 import subprocess
 import sys
-import tempfile
 
 import numpy as np
 from scipy.io import wavfile
 
 sys.path.insert(0, os.path.dirname(__file__))
-import music  # noqa: E402
+import compose  # noqa: E402
 import sfx  # noqa: E402
 from synth import SR, peak_normalize  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SFX_DIR = os.path.join(ROOT, "audio", "sfx")
 MUSIC_DIR = os.path.join(ROOT, "audio", "music")
-MUSIC_LUFS = -18.0
-MUSIC_PEAK_CEILING_DB = -1.5
+RENDER = ["lockf", "-t", "3600", "/tmp/audiokit/render.lock", "arch", "-arm64",
+          "/tmp/audiokit/venv/bin/python", "/tmp/audiokit/render.py"]
+MUSIC = ("scanning_table", "exposure")
 
 
 def write_wav(path: str, x: np.ndarray) -> None:
@@ -37,49 +41,50 @@ def write_wav(path: str, x: np.ndarray) -> None:
     wavfile.write(path, SR, pcm)
 
 
-def measure_lufs(path: str) -> float:
-    res = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", path, "-af", "ebur128",
-                          "-f", "null", "-"], capture_output=True, text=True, check=True)
-    found = re.findall(r"I:\s+(-?[\d.]+) LUFS", res.stderr)
-    return float(found[-1])
+def measure(path: str) -> tuple[float, float]:
+    """Integrated LUFS and true peak (dBTP) via ffmpeg's ebur128 meter."""
+    res = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", path, "-af",
+                          "ebur128=peak=true", "-f", "null", "-"],
+                         capture_output=True, text=True, check=True)
+    lufs = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", res.stderr)[-1])
+    peak = float(re.findall(r"Peak:\s+(-?[\d.inf]+) dBFS", res.stderr)[-1])
+    return lufs, peak
 
 
-def build_sfx() -> None:
+def render(work: str) -> None:
+    for spec in compose.write_all(work):
+        print(f"render {os.path.basename(spec)}", flush=True)
+        subprocess.run(RENDER + [spec], check=True)
+
+
+def build_sfx(work: str) -> None:
     os.makedirs(SFX_DIR, exist_ok=True)
-    for name, (x, peak) in sfx.render_all().items():
-        write_wav(os.path.join(SFX_DIR, f"{name}.wav"), peak_normalize(x, peak))
-        print(f"sfx  {name:13s} {len(x) / SR:5.2f}s peak {peak:+.1f} dBFS")
+    for name, (x, peak) in sfx.render_all(work).items():
+        path = os.path.join(SFX_DIR, f"{name}.wav")
+        write_wav(path, peak_normalize(x, peak))
+        lufs, tp = measure(path)
+        print(f"sfx   {name:13s} {len(x) / SR:5.2f}s peak {peak:+.1f} dBFS  {lufs:6.1f} LUFS  {tp:+.1f} dBTP")
 
 
-def build_music() -> None:
+def build_music(work: str) -> None:
     os.makedirs(MUSIC_DIR, exist_ok=True)
-    with tempfile.TemporaryDirectory() as tmp:
-        for name, fn in music.TRACKS.items():
-            x = fn()
-            wav = os.path.join(tmp, f"{name}.wav")
-            x = peak_normalize(x, -6.0)
-            write_wav(wav, x)
-            gain_db = MUSIC_LUFS - measure_lufs(wav)
-            x = x * 10 ** (gain_db / 20)
-            peak_db = 20 * np.log10(np.max(np.abs(x)))
-            if peak_db > MUSIC_PEAK_CEILING_DB:
-                print(f"warn {name}: peak {peak_db:.1f} dBFS above ceiling, limiting gain")
-                x *= 10 ** ((MUSIC_PEAK_CEILING_DB - peak_db) / 20)
-            write_wav(wav, x)
-            out = os.path.join(MUSIC_DIR, f"{name}.mp3")
-            subprocess.run(["lame", "--quiet", "-b", "128", "--cbr", "-q", "2", wav, out], check=True)
-            print(f"music {name:13s} {len(x) / SR:6.2f}s {measure_lufs(wav):.1f} LUFS")
+    for name in MUSIC:
+        wav = os.path.join(work, f"{name}.wav")
+        out = os.path.join(MUSIC_DIR, f"{name}.mp3")
+        subprocess.run(["lame", "--quiet", "-b", "128", "--cbr", "-q", "2", wav, out], check=True)
+        lufs, tp = measure(out)
+        print(f"music {name:13s} {lufs:.1f} LUFS  {tp:+.1f} dBTP (mp3)")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sfx", action="store_true", help="only render sound effects")
-    ap.add_argument("--music", action="store_true", help="only render music")
+    ap.add_argument("--work", default="/tmp/element-maze-audio")
+    ap.add_argument("--no-render", action="store_true", help="reuse existing renders in --work")
     args = ap.parse_args()
-    if not args.music:
-        build_sfx()
-    if not args.sfx:
-        build_music()
+    if not args.no_render:
+        render(args.work)
+    build_sfx(args.work)
+    build_music(args.work)
 
 
 if __name__ == "__main__":
