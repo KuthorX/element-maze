@@ -22,16 +22,16 @@ const DUCK_DB := -9.0
 const SILENT_DB := -60.0
 
 const MUSIC := {
-	"scanning_table": preload("res://audio/music/scanning_table.mp3"),
-	"exposure": preload("res://audio/music/exposure.mp3"),
+	"scanning_table": preload("res://audio/music/scanning_table.ogg"),
+	"exposure": preload("res://audio/music/exposure.ogg"),
 }
 const SFX := {
 	"launch": preload("res://audio/sfx/launch.wav"),
 	"wall_hit": preload("res://audio/sfx/wall_hit.wav"),
-	"fizz": preload("res://audio/sfx/fizz.wav"),
-	"goal": preload("res://audio/sfx/goal.wav"),
-	"out_of_balls": preload("res://audio/sfx/out_of_balls.wav"),
-	"target_met": preload("res://audio/sfx/target_met.wav"),
+	"fizz": preload("res://audio/sfx/fizz.ogg"),
+	"goal": preload("res://audio/sfx/goal.ogg"),
+	"out_of_balls": preload("res://audio/sfx/out_of_balls.ogg"),
+	"target_met": preload("res://audio/sfx/target_met.ogg"),
 	"ui_click": preload("res://audio/sfx/ui_click.wav"),
 	"ui_hover": preload("res://audio/sfx/ui_hover.wav"),
 	"ui_confirm": preload("res://audio/sfx/ui_confirm.wav"),
