@@ -34,6 +34,7 @@ func _ready():
 func _on_mouse_entered():
 	mouse_inside = true
 	$Sprite2D.modulate = HOVER_MODULATE
+	Audio.play("ui_hover")
 
 func _on_mouse_exited():
 	mouse_inside = false
@@ -46,11 +47,13 @@ func _on_touch_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: 
 			var new_rotation_deg = rad_to_deg(target_rotation) + rotation_step
 			new_rotation_deg = clamp(new_rotation_deg, min_rotation_degrees, max_rotation_degrees)
 			target_rotation = deg_to_rad(new_rotation_deg)
+			Audio.play("rotate")
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			# 滚轮下滚，逆时针旋转
 			var new_rotation_deg = rad_to_deg(target_rotation) - rotation_step
 			new_rotation_deg = clamp(new_rotation_deg, min_rotation_degrees, max_rotation_degrees)
 			target_rotation = deg_to_rad(new_rotation_deg)
+			Audio.play("rotate", 0.9)
 
 func _process(delta: float):
 	# 平滑旋转到目标角度

@@ -2,10 +2,12 @@ keys,en,zh
 GAME_TITLE,Guide The Ball,引导小球
 TITLE_START,Press Space to begin,按空格键开始
 HUD_BALLS_LEFT,Balls,剩余球数
-HUD_CONTROLS,SPACE launch   WHEEL rotate wall   DRAG pan   R replay,空格 发射   滚轮 旋转墙   拖动 平移   R 重来
+HUD_CONTROLS,SPACE launch   WHEEL rotate wall   DRAG pan   R replay   M mute,空格 发射   滚轮 旋转墙   拖动 平移   R 重来   M 静音
 HUD_RULES,Walls boost speed by their number   Avoid boiling zones   Faster balls score higher,墙上数字是加速倍数   避开沸腾区   球速越快得分越高
 HUD_SPEED,Speed %s,球速 %s
 IMPRINT_TARGET,Target %s,目标 %s
 END_WIN,Target met,达成目标
 END_OUT,Out of balls,小球用完了
 END_SCORE,Target %s   R to replay,目标 %s   按 R 重来
+HUD_SOUND,Sound,声音
+HUD_SOUND_OFF,off,关

@@ -115,6 +115,7 @@ func _on_absorb_complete(ball: CharacterBody2D, initial_speed: float):
 	print("Ball absorbed, score added: ", int(ceil(initial_speed)))
 
 func _add_score(amount: int):
+	Audio.play("goal")
 	if _level_state and _level_state.has_method("add_score"):
 		print("Adding score: ", amount, " at time: ", Time.get_ticks_msec())
 		_level_state.add_score(amount)

@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://c1ijpdu63rwha" path="res://scripts/EnergyWall.gd" id="5_q6r6c"]
 [ext_resource type="Script" uid="uid://claivnojwy5g6" path="res://scripts/DecZone.gd" id="13_nr8wp"]
 [ext_resource type="Script" uid="uid://bwh7d5bxaks17" path="res://scripts/LanguageToggle.gd" id="14_lang"]
+[ext_resource type="Script" path="res://scripts/SoundToggle.gd" id="24_sound"]
 [ext_resource type="Script" path="res://scripts/Frame.gd" id="15_film"]
 [ext_resource type="Script" path="res://scripts/Imprint.gd" id="16_imprint"]
 [ext_resource type="Script" path="res://scripts/Annotation.gd" id="17_note"]
@@ -259,10 +260,23 @@ auto_translate_mode = 2
 horizontal_alignment = 2
 text = "中文"
 
+[node name="SoundLabel" type="Label" parent="Film/EdgeLayer/View"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -200.0
+offset_top = 16.0
+offset_right = -48.0
+offset_bottom = 30.0
+grow_horizontal = 0
+auto_translate_mode = 2
+horizontal_alignment = 2
+text = "Sound"
+
 [node name="ControlsLabel" type="Label" parent="Film/EdgeLayer/View"]
 offset_left = 16.0
 offset_top = 330.0
-offset_right = 400.0
+offset_right = 460.0
 offset_bottom = 344.0
 text = "HUD_CONTROLS"
 
@@ -411,7 +425,7 @@ auto_translate_mode = 2
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -260.0
+offset_left = -124.0
 offset_top = 36.0
 offset_right = -36.0
 offset_bottom = 104.0
@@ -421,6 +435,22 @@ mouse_default_cursor_shape = 2
 flat = true
 script = ExtResource("14_lang")
 label_path = NodePath("../EdgeLayer/View/LangLabel")
+[node name="SoundToggle" type="Button" parent="Film"]
+auto_translate_mode = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -390.0
+offset_top = 36.0
+offset_right = -132.0
+offset_bottom = 104.0
+grow_horizontal = 0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+flat = true
+script = ExtResource("24_sound")
+label_path = NodePath("../EdgeLayer/View/SoundLabel")
+
 [connection signal="input_event" from="EnergyWall/TouchArea" to="EnergyWall" method="_on_touch_area_input_event"]
 [connection signal="input_event" from="EnergyWall2/TouchArea" to="EnergyWall2" method="_on_touch_area_input_event"]
 [connection signal="input_event" from="EnergyWall3/TouchArea" to="EnergyWall3" method="_on_touch_area_input_event"]

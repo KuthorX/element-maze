@@ -32,6 +32,7 @@ func _spawn_color_ball() -> void:
 	var level_state = get_tree().get_first_node_in_group("level_score")
 	if level_state and not level_state.consume_ball():
 		GameLogger.info("Cannot spawn ball: no remaining balls", "ElementSource")
+		Audio.play("empty")
 		return
 
 	var ball := ColorBallScene.instantiate()
@@ -47,6 +48,7 @@ func _spawn_color_ball() -> void:
 	ball.global_position = global_position
 
 	spawned_balls.append(ball)
+	Audio.play("launch")
 	ball.tree_exited.connect(_on_ball_tree_exited.bind(ball))
 	GameLogger.info("ColorBall spawned successfully, total balls: %d" % spawned_balls.size(), "ElementSource")
 

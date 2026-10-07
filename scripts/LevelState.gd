@@ -46,6 +46,7 @@ func _ready() -> void:
 	reset_requested.connect(_reset_to_initial_values)
 	_imprint.show_title()
 	_hide_level()
+	Audio.play_music("scanning_table")
 
 
 func is_playing() -> bool:
@@ -156,6 +157,8 @@ func _end_round() -> void:
 	_power_level(POWERED_OFF)
 	_speed_readout.text = ""
 	_imprint.show_end(score >= goal_score, score, goal_score)
+	Audio.play("target_met" if score >= goal_score else "out_of_balls")
+	Audio.duck_music(true)
 	GameLogger.info("Round ended with score %d" % score, "LevelState")
 
 
@@ -198,6 +201,8 @@ func _start_round() -> void:
 		_power_level(Color.WHITE)
 	state = State.PLAYING
 	_settled_time = 0.0
+	Audio.play("ui_confirm")
+	Audio.play_music("exposure")
 	_imprint.show_play(goal_score)
 	_update_score_display()
 

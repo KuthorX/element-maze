@@ -8,6 +8,10 @@ extends Area2D
 var bodies_inside: Array[CharacterBody2D] = []  # 跟踪进入的 CharacterBody2D
 var _sprite: CanvasItem
 var _opacity_timer: float = 0.0  # 用于不透明度变化的计时器
+var _fizz_timer: float = 0.0
+
+const FIZZ_REPEAT := 0.5  # seconds between fizz bursts while a ball boils through
+const FIZZ_MIN_SPEED := 25.0
 
 func _ready():
 	# 获取 Sprite2D 子节点
@@ -39,10 +43,24 @@ func _physics_process(delta: float):
 			# 防止速度反转或过小
 			if body.velocity.length() < 1.0:
 				body.velocity = Vector2.ZERO
+	_update_fizz(delta)
+
+
+## Keeps the zone boiling audibly while a moving ball is inside it.
+func _update_fizz(delta: float) -> void:
+	var moving := bodies_inside.any(func(b): return is_instance_valid(b) and b.velocity.length() > FIZZ_MIN_SPEED)
+	if not moving:
+		_fizz_timer = 0.0
+		return
+	_fizz_timer += delta
+	if _fizz_timer >= FIZZ_REPEAT:
+		_fizz_timer = 0.0
+		Audio.play("fizz")
 
 func _on_body_entered(body: Node):
 	if body is CharacterBody2D:
 		bodies_inside.append(body)
+		Audio.play("fizz")
 		print("CharacterBody2D entered deceleration zone: ", body.name)
 
 func _on_body_exited(body: Node):

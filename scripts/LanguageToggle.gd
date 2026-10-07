@@ -10,6 +10,7 @@ var _label: Label
 func _ready() -> void:
 	_label = get_node(label_path)
 	pressed.connect(Localization.toggle_locale)
+	pressed.connect(Audio.play.bind("ui_click"))
 	Localization.locale_changed.connect(_on_locale_changed)
 	_on_locale_changed(Localization.current_locale)
 

@@ -44,6 +44,7 @@ func _physics_process(delta: float):
 			var remainder = collision_info.get_remainder().bounce(collision_info.get_normal())
 			remainder = remainder.normalized() * (remainder.length() * boost)  # 应用提升到剩余向量
 			move_and_collide(remainder)
+			Audio.play_wall_hit(boost, velocity.length())
 			if is_instance_valid(trail):
 				trail.spawn_impact(global_position, collision_info.get_normal())
 
